@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="JdaTools.Studio.Views.QueryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JdaTools.Studio.Views" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:viewmodels="clr-namespace:JdaTools.Studio.ViewModels"
+             Loaded="UserControl_Loaded"
+             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+             
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <avalonedit:TextEditor Grid.Row="1"
+                               x:Name="QueryTextBox"
+                               IsEnabledChanged="QueryTextBox_IsEnabledChanged"
+                               ShowLineNumbers="True" 
+                               Document="{Binding QueryDocument}"/>
+        <GridSplitter Grid.Row="2" Margin="2,0,2,0"
+                  Height="3" 
+                  VerticalAlignment="Center" 
+                  HorizontalAlignment="Stretch"/>
+        <DataGrid x:Name="ResultsGrid" 
+                  Grid.Row="3" 
+                  ItemsSource="{Binding ResultData}"
+                  AutoGeneratingColumn="ResultsGrid_AutoGeneratingColumn"
+                  />
+        <StackPanel Orientation="Horizontal" Grid.Row="4" >
+            <Button Content="EXECUTE" Command="{Binding ExecuteCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

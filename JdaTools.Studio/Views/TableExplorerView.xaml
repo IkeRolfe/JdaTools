@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="JdaTools.Studio.Views.TableExplorerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JdaTools.Studio.Views" xmlns:viewmodels="clr-namespace:JdaTools.Studio.ViewModels" xmlns:converters="clr-namespace:JdaTools.Studio.Converters"
+             mc:Ignorable="d" 
+             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+             d:DesignHeight="800" d:DesignWidth="450"
+             d:DataContext="{d:DesignInstance viewmodels:TableExplorerViewModel, IsDesignTimeCreatable=True}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" HorizontalAlignment="Left" MinWidth="100"
+                 KeyUp="TextBox_KeyEnterUpdate"
+                 Text="{Binding SearchString}"/>
+        <Button Content="REFRESH" HorizontalAlignment="Right" Command="{Binding RefreshCommand}"/>
+        <TreeView Grid.Row="1" x:Name="TableListView">
+            <TreeViewItem ItemsSource="{Binding Tables}" Header="Tables">
+                <TreeViewItem.ItemTemplate>
+                    <DataTemplate>
+                        <TreeViewItem Header="{Binding}" ItemsSource="{Binding Columns}">
+                            <TreeViewItem.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Generate SELECT statement" 
+                                          Click="GenerateSelect_Clicked"
+                                          Tag="{Binding}"
+                                          />
+                                    <MenuItem Header="Generate INSERT statement (not implemented)"/>
+                                </ContextMenu>
+                            </TreeViewItem.ContextMenu>
+                        </TreeViewItem>
+                    </DataTemplate>
+                </TreeViewItem.ItemTemplate>
+            </TreeViewItem>
+        </TreeView>
+    </Grid>
+</UserControl>
