@@ -42,6 +42,13 @@ namespace JdaTools.Studio.ViewModels
             get => resultData;
             set => SetProperty(ref resultData, value);
         }
+        private string _title = "NEW EDITOR";
+
+        public string Title
+        {
+            get => _title;
+            set => SetProperty(ref _title, value);
+        }
 
         private ICommand executeCommand;
         public ICommand ExecuteCommand => executeCommand ??= new AsyncRelayCommand(Execute);

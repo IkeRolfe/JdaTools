@@ -95,7 +95,10 @@ namespace JdaTools.Studio.ViewModels
 
         private async void ExecuteCurrentTab()
         {
-            await SelectedEditor.Execute();
+            if (SelectedEditor != null)
+            {
+                await SelectedEditor.Execute();
+            }
         }
 
         private bool isEnabled;

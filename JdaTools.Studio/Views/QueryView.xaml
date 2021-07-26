@@ -9,7 +9,11 @@
              
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    
+    <UserControl.InputBindings>
+        <KeyBinding Modifiers="Control"
+                    Key="Return"
+                    Command="{Binding ExecuteCommand}" />
+    </UserControl.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
