@@ -9,11 +9,7 @@
     <Window.DataContext>
         <viewmodels:ShellViewModel/>
     </Window.DataContext>
-    <Window.InputBindings>
-        <KeyBinding Modifiers="Control"
-                    Key="Return"
-                    Command="{Binding ExecuteCurrentTabCommand}" />
-    </Window.InputBindings>
+    
     <Grid>
         <Grid IsEnabled="{Binding IsEnabled}">
             <Grid.RowDefinitions>
@@ -34,7 +30,20 @@
                   Width="3" 
                   VerticalAlignment="Stretch" 
                   HorizontalAlignment="Center"/>
-                <TabControl Grid.Column="2" ItemsSource="{Binding QueryViewModels}" SelectedItem="{Binding SelectedEditor}">
+                <DockingManager Grid.Column="2" DocumentsSource="{Binding QueryViewModels}" ActiveContent="{Binding SelectedEditor}">
+                    <DockingManager.DocumentHeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Content.Title}"/>
+                        </DataTemplate>
+                    </DockingManager.DocumentHeaderTemplate>
+                    <DockingManager.LayoutItemTemplate>
+                        <DataTemplate>
+                            <views:QueryView DataContext="{Binding Content}"></views:QueryView>
+                        </DataTemplate>
+                    </DockingManager.LayoutItemTemplate>
+                    
+                </DockingManager>
+                <!--<TabControl Grid.Column="2" ItemsSource="{Binding QueryViewModels}" SelectedItem="{Binding SelectedEditor}">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="QUERY">
@@ -47,7 +56,8 @@
                             <views:QueryView DataContext="{Binding}"></views:QueryView>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
-                </TabControl>
+                </TabControl>-->
+
             </Grid>
         </Grid>
         <Grid Background="AliceBlue" Visibility="{Binding LoginVisibility}">
