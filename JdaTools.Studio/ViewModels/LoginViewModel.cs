@@ -25,7 +25,8 @@ namespace JdaTools.Studio.ViewModels
 
         public LoginViewModel()
         {
-            _mocaClient = Ioc.Default.GetService<MocaClient>();            
+            _mocaClient = Ioc.Default.GetService<MocaClient>();
+            
         }
         public string Endpoint
         {

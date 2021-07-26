@@ -30,7 +30,8 @@
                   Width="3" 
                   VerticalAlignment="Stretch" 
                   HorizontalAlignment="Center"/>
-                <DockingManager Grid.Column="2" DocumentsSource="{Binding QueryViewModels}" ActiveContent="{Binding SelectedEditor}">
+                <DockingManager Grid.Column="2" DocumentsSource="{Binding QueryViewModels}" 
+                                ActiveContent="{Binding SelectedEditor, Mode=TwoWay}">
                     <DockingManager.DocumentHeaderTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Content.Title}"/>
