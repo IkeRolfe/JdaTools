@@ -23,8 +23,8 @@
                 <TextBox Text="{Binding Endpoint}" MinWidth="200"/>
             </StackPanel>
             <StackPanel Orientation="Vertical">
-                <TextBox Text="{Binding UserName}" CharacterCasing="Upper" MinWidth="200"/>
-                <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" Password="I HEART KITTENS"/>
+                <TextBox x:Name="Username" Text="{Binding UserName}" CharacterCasing="Upper" MinWidth="200"/>
+                <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" />
                 <Button Content="LOGIN" Command="{Binding LoginCommand}" IsDefault="True"/>
             </StackPanel>
         </StackPanel>

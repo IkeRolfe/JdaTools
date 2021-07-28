@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using static System.Environment;
 
 namespace JdaTools.ConfigurationManager
 {
@@ -15,7 +16,9 @@ namespace JdaTools.ConfigurationManager
         {
             try
             {
-                _configs = ReadXML<Configurations>(filePath);
+                var commonpath = GetFolderPath(SpecialFolder.CommonApplicationData);
+                var path = Path.Combine(commonpath, "JdaStudio", filePath);
+                _configs = ReadXML<Configurations>(Path.Combine(commonpath, "JdaStudio", filePath));
             }
             catch
             {
@@ -52,9 +55,10 @@ namespace JdaTools.ConfigurationManager
             
         }
 
-        public async Task WriteConfigurationFile(string filePath)
+        public async Task WriteConfigurationFile(string fileName)
         {
-            WriteXML(_configs, filePath);
+            
+            WriteXML(_configs, fileName);
         }
         private static T ReadXML<T>(string filePath)
         {
@@ -74,11 +78,17 @@ namespace JdaTools.ConfigurationManager
             return default;
         }
 
-        private static bool WriteXML<T>(T classToSave, string filePath)
+        private static bool WriteXML<T>(T classToSave, string fileName)
         {
             try
             {
-                using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                var commonpath = GetFolderPath(SpecialFolder.CommonApplicationData);
+                var filePath = Path.Combine(commonpath, "JdaStudio");
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+                using (FileStream stream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
                 {
                     var xsz = new XmlSerializer(typeof(T));
                     xsz.Serialize(stream, classToSave);

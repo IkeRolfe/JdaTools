@@ -33,7 +33,7 @@ namespace JdaTools.Studio.ViewModels
             _mocaClient = Ioc.Default.GetService<MocaClient>();
             _xmlManager = new XMLManager();
             _xmlManager.ReadConfigurationFile("ConnectionConfigs.xml");
-            _selectedConnection = _xmlManager._configs.Connections.FirstOrDefault(c => c.Default);
+            SelectedConnection = _xmlManager._configs.Connections.FirstOrDefault(c => c.Default);
 
         }
 
@@ -42,12 +42,12 @@ namespace JdaTools.Studio.ViewModels
         {
             get
             {
-                EndpointName = _selectedConnection.Name;
-                Endpoint = _selectedConnection.Url;
                 return _selectedConnection;
             }
             set
             {
+                EndpointName = value.Name;
+                Endpoint = value.Url;
                 SetProperty(ref _selectedConnection, value);
             }
         }
@@ -64,8 +64,7 @@ namespace JdaTools.Studio.ViewModels
             get => _endPoint;
             set
             {
-                SetProperty(ref _endPoint, value);
-                _mocaClient.Endpoint = value;
+                SetProperty(ref _endPoint, value);                
             }
         }
         public string UserName 
@@ -94,8 +93,18 @@ namespace JdaTools.Studio.ViewModels
 
         public async Task Login()
         {
+            _mocaClient.Endpoint = Endpoint;
+            await SaveConnection();
             var mocaResponse = await _mocaClient.ConnectAsync(new MocaCredentials(UserName, Password));
             LoginCompleteAction?.Invoke();
+                    
+        }
+
+        public async Task SaveConnection()
+        {
+            SelectedConnection.Name = EndpointName;
+            SelectedConnection.Url = Endpoint;
+            
             await _xmlManager.SetDefault(SelectedConnection);
             await _xmlManager.WriteConfigurationFile("ConnectionConfigs.xml");
         }

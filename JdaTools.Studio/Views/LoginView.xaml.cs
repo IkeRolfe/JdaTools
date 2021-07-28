@@ -26,6 +26,7 @@ namespace JdaTools.Studio.Views
         public LoginView()
         {
             InitializeComponent();
+            Username.Focus();
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
