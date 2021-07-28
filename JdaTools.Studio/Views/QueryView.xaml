@@ -26,7 +26,9 @@
                                x:Name="QueryTextBox"
                                IsEnabledChanged="QueryTextBox_IsEnabledChanged"
                                ShowLineNumbers="True" 
-                               Document="{Binding QueryDocument}"/>
+                               Document="{Binding QueryDocument}"                               
+                               >            
+        </avalonedit:TextEditor>
         <GridSplitter Grid.Row="2" Margin="2,0,2,0"
                   Height="3" 
                   VerticalAlignment="Center" 

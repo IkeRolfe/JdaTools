@@ -26,7 +26,9 @@ namespace JdaTools.Studio.ViewModels
         public LoginViewModel()
         {
             _mocaClient = Ioc.Default.GetService<MocaClient>();
-            
+            Endpoint = "http://wlgprdmoca.edc.ecentria.com:5040/service";
+            UserName = "ASUPRPL";
+            Password = "1234";
         }
         public string Endpoint
         {
