@@ -17,24 +17,22 @@
                  KeyUp="TextBox_KeyEnterUpdate"
                  Text="{Binding SearchString}"/>
         <Button Content="REFRESH" HorizontalAlignment="Right" Command="{Binding RefreshCommand}"/>
-        <TreeView Grid.Row="1" x:Name="TableListView">
-            <TreeViewItem ItemsSource="{Binding Tables}" Header="Tables">
-                <TreeViewItem.ItemTemplate>
-                    <DataTemplate>
-                        <TreeViewItem Header="{Binding}" ItemsSource="{Binding Columns}">
-                            <TreeViewItem.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Generate SELECT statement" 
+        <TreeView Grid.Row="1" x:Name="TableListView" ItemsSource="{Binding Tables}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate  ItemsSource="{Binding Columns}">
+                    <TextBlock Text="{Binding}">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Generate SELECT statement" 
                                           Click="GenerateSelect_Clicked"
                                           Tag="{Binding}"
                                           />
-                                    <MenuItem Header="Generate INSERT statement (not implemented)"/>
-                                </ContextMenu>
-                            </TreeViewItem.ContextMenu>
-                        </TreeViewItem>
-                    </DataTemplate>
-                </TreeViewItem.ItemTemplate>
-            </TreeViewItem>
+                                <MenuItem Header="Generate INSERT statement (not implemented)"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+                </HierarchicalDataTemplate>                
+            </TreeView.ItemTemplate>            
         </TreeView>
     </Grid>
 </UserControl>
