@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
+using JdaTools.ConfigurationManager;
 
 namespace JdaTools.Studio.ViewModels
 {
@@ -16,17 +17,47 @@ namespace JdaTools.Studio.ViewModels
         private MocaClient _mocaClient;
         private string _userName;
         private string _password;    
+        private string _endPointName;
         private string _endPoint;
+        private XMLManager _xmlManager;
+        private ConnectionInfo _selectedConnection;
 
         public LoginViewModel(MocaClient mocaClient)
         {
             _mocaClient = mocaClient;
+            _xmlManager = new XMLManager();
         }
 
         public LoginViewModel()
         {
             _mocaClient = Ioc.Default.GetService<MocaClient>();
-            
+            _xmlManager = new XMLManager();
+            _xmlManager.ReadConfigurationFile("ConnectionConfigs.xml");
+            _selectedConnection = _xmlManager._configs.Connections.FirstOrDefault(c => c.Default);
+
+        }
+
+        public List<ConnectionInfo> Connections => _xmlManager._configs.Connections;
+        public ConnectionInfo SelectedConnection
+        {
+            get
+            {
+                EndpointName = _selectedConnection.Name;
+                Endpoint = _selectedConnection.Url;
+                return _selectedConnection;
+            }
+            set
+            {
+                SetProperty(ref _selectedConnection, value);
+            }
+        }
+        public string EndpointName
+        {
+            get => _endPointName;
+            set
+            {
+                SetProperty(ref _endPointName, value);
+            }
         }
         public string Endpoint
         {
@@ -65,6 +96,8 @@ namespace JdaTools.Studio.ViewModels
         {
             var mocaResponse = await _mocaClient.ConnectAsync(new MocaCredentials(UserName, Password));
             LoginCompleteAction?.Invoke();
+            await _xmlManager.SetDefault(SelectedConnection);
+            await _xmlManager.WriteConfigurationFile("ConnectionConfigs.xml");
         }
 
         private ICommand loginCommand;
