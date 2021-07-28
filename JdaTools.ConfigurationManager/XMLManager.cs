@@ -12,15 +12,15 @@ namespace JdaTools.ConfigurationManager
     {
         public Configurations _configs;
         public List<ConnectionInfo> Connections => _configs.Connections;
-        public async Task ReadConfigurationFile(string filePath)
+        public void ReadConfigurationFile(string filePath)
         {
             try
             {
                 var commonpath = GetFolderPath(SpecialFolder.CommonApplicationData);
                 var path = Path.Combine(commonpath, "JdaStudio", filePath);
-                _configs = ReadXML<Configurations>(Path.Combine(commonpath, "JdaStudio", filePath));
+                _configs = ReadXML<Configurations>(path);
             }
-            catch
+            catch(Exception e)
             {
                 _configs = new Configurations();
             }
@@ -57,7 +57,8 @@ namespace JdaTools.ConfigurationManager
 
         public async Task WriteConfigurationFile(string fileName)
         {
-            
+            //TODO: Better handling of new conn this is a work around for a "New Connection" profile always being created
+            _configs.Connections.RemoveAll(c => string.IsNullOrEmpty(c.Url));
             WriteXML(_configs, fileName);
         }
         private static T ReadXML<T>(string filePath)
