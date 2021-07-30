@@ -128,7 +128,7 @@ namespace JdaTools.Studio.Views
             string header = e.Column.Header.ToString();
             // Replace all underscores with two underscores, to prevent AccessKey handling
             var type = e.PropertyType;
-            header = header + $" ({type.Name})";
+            //header = header + $" ({type.Name})";
             e.Column.Header = header.Replace("_", "__");
 
         }

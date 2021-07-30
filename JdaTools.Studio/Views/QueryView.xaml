@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:JdaTools.Studio.Views" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:viewmodels="clr-namespace:JdaTools.Studio.ViewModels"
+             xmlns:local="clr-namespace:JdaTools.Studio.Views" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:viewmodels="clr-namespace:JdaTools.Studio.ViewModels" 
+             xmlns:iconpacks="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.Material"
              Loaded="UserControl_Loaded"
              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
              
@@ -22,6 +23,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        
         <avalonedit:TextEditor Grid.Row="1"
                                x:Name="QueryTextBox"
                                IsEnabledChanged="QueryTextBox_IsEnabledChanged"
@@ -37,9 +39,10 @@
                   Grid.Row="3" 
                   ItemsSource="{Binding ResultData}"
                   AutoGeneratingColumn="ResultsGrid_AutoGeneratingColumn"
+                  Style="{StaticResource MahApps.Styles.DataGrid}"
                   />
         <StackPanel Orientation="Horizontal" Grid.Row="4" >
-            <Button Content="EXECUTE" Command="{Binding ExecuteCommand}"/>
+            
         </StackPanel>
     </Grid>
 </UserControl>

@@ -1,10 +1,12 @@
-﻿<Window x:Class="JdaTools.Studio.Views.ShellView"
+﻿<mah:MetroWindow  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                  x:Class="JdaTools.Studio.Views.ShellView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JdaTools.Studio" xmlns:views="clr-namespace:JdaTools.Studio.Views" xmlns:viewmodels="clr-namespace:JdaTools.Studio.ViewModels"
         mc:Ignorable="d"
+                  xmlns:iconpacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         Title="JDA EXPLORER" Height="450" Width="800">
     <Window.DataContext>
         <viewmodels:ShellViewModel/>
@@ -12,38 +14,69 @@
     
     <Grid>
         <Grid IsEnabled="{Binding IsEnabled}">
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="NEW EDITOR" Command="{Binding NewEditorCommand}"/>
-            </StackPanel>
+            
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <views:TableExplorerView DataContext="{Binding TableExplorerViewModel}" Grid.Column="0"/>
+                <mah:MetroTabControl Grid.Column="0" TabStripPlacement="Bottom" Style="{StaticResource MahApps.Styles.TabControl    }">
+                    <TabControl.Resources>
+                        <Style TargetType="{x:Type TabItem}">
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock TextElement.FontSize="12" 
+                                  Text="{Binding Path=Header, RelativeSource={RelativeSource AncestorType=TabItem}}"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TabControl.Resources>
+                    <TabItem Header="TABLES">
+                        <views:TableExplorerView DataContext="{Binding TableExplorerViewModel}"/>
+                    </TabItem>
+                    <TabItem Header="COMMANDS">
+                        <TextBlock>TODO</TextBlock>
+                    </TabItem>
+                </mah:MetroTabControl>
                 <GridSplitter Grid.Column="1" Margin="2,0,2,0"
                   Width="3" 
                   VerticalAlignment="Stretch" 
                   HorizontalAlignment="Center"/>
-                <DockingManager Grid.Column="2" DocumentsSource="{Binding QueryViewModels}" 
+                <Grid Grid.Column="2" Margin="0 2 0 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="{iconpacks:Material Kind=Play}" Foreground="Green" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
+                        <Button Content="{iconpacks:Material Kind=ContentSave}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
+                        <Button Content="{iconpacks:Material Kind=FolderOpen}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
+                        <Button Content="{iconpacks:FontAwesome Kind=RouteSolid}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
+                        <Button Content="{iconpacks:Material Kind=TabPlus}" Foreground="DarkKhaki" Command="{Binding NewEditorCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
+                    </StackPanel>
+                    <DockingManager Grid.Row="1" DocumentsSource="{Binding QueryViewModels}" 
                                 ActiveContent="{Binding SelectedEditor, Mode=TwoWay}">
-                    <DockingManager.DocumentHeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Content.Title}"/>
-                        </DataTemplate>
-                    </DockingManager.DocumentHeaderTemplate>
-                    <DockingManager.LayoutItemTemplate>
-                        <DataTemplate>
-                            <views:QueryView DataContext="{Binding Content}"></views:QueryView>
-                        </DataTemplate>
-                    </DockingManager.LayoutItemTemplate>
-                    
-                </DockingManager>
+                        <DockingManager.DocumentHeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Content.Title}"/>
+                            </DataTemplate>
+                        </DockingManager.DocumentHeaderTemplate>
+                        <DockingManager.LayoutItemTemplate>
+                            <DataTemplate>
+                                <views:QueryView DataContext="{Binding Content}"></views:QueryView>
+                            </DataTemplate>
+                        </DockingManager.LayoutItemTemplate>
+
+                    </DockingManager>
+                </Grid>
                 <!--<TabControl Grid.Column="2" ItemsSource="{Binding QueryViewModels}" SelectedItem="{Binding SelectedEditor}">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
@@ -66,4 +99,4 @@
                 VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5"/>
         </Grid>
     </Grid>
-</Window>
+</mah:MetroWindow>

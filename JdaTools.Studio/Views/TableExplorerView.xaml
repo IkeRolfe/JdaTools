@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JdaTools.Studio.Views" xmlns:viewmodels="clr-namespace:JdaTools.Studio.ViewModels" xmlns:converters="clr-namespace:JdaTools.Studio.Converters"
+             xmlns:iconpacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
              d:DesignHeight="800" d:DesignWidth="450"
@@ -13,10 +15,18 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" HorizontalAlignment="Left" MinWidth="100"
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Row="0" MinWidth="100"
                  KeyUp="TextBox_KeyEnterUpdate"
+                     mah:TextBoxHelper.Watermark="search tables"
                  Text="{Binding SearchString}"/>
-        <Button Content="REFRESH" HorizontalAlignment="Right" Command="{Binding RefreshCommand}"/>
+            <Button Grid.Column="1"                    
+                Content="{iconpacks:Material Kind=Replay}" HorizontalAlignment="Right" Command="{Binding RefreshCommand}"/>
+        </Grid>
         <TreeView Grid.Row="1" x:Name="TableListView" ItemsSource="{Binding Tables}">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate  ItemsSource="{Binding Columns}">
