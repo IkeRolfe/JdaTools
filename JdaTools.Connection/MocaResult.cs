@@ -101,8 +101,7 @@ namespace JdaTools.Connection
             }
 
             return dataTable;
-        }
-
+        } 
         private Type GetColumnType(Column columnDef)
         {
             var nullable = columnDef.Nullable;
@@ -111,8 +110,8 @@ namespace JdaTools.Connection
                 "S" => typeof(string),
                 //"I" => nullable ? typeof(int) : typeof(int?),
                 "I" => typeof(int),
-                /*"D" => typeof(DateTime),
-                "O" => typeof(bool),*/
+                //"D" => typeof(DateTime),
+                "O" => typeof(bool),
                 _ => typeof(string)
             };
             return columnType;

@@ -67,6 +67,7 @@ namespace JdaTools.Connection
 
             var mySerializer = new XmlSerializer(typeof(MocaResponse));
             var stream = await result.Content.ReadAsStreamAsync();
+            var text = await result.Content.ReadAsStringAsync();
             var response = (MocaResponse)mySerializer.Deserialize(stream);
             //var dt = response.MocaResults.GetDataTable();
             //var row = dt.Rows[0];

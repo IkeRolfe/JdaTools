@@ -18,6 +18,8 @@ namespace JdaTools.Studio.Services
             _mocaClient = mocaClient;
         }
         private IEnumerable<CommandDefinition> _commands;
+        private IEnumerable<string> _files;
+
         public IEnumerable<CommandDefinition> Commands
         {
             get
@@ -46,6 +48,20 @@ namespace JdaTools.Studio.Services
             private set => _tables = value;
         }
 
+        public IEnumerable<string> Files
+        {
+            get
+            {
+                //TODO Disabled till we have good IsConnected check for moca client
+                /*if (_tables == null)
+                {
+                    RefreshTables().RunSynchronously();
+                }*/
+                return _files;
+            }
+            private set => _files = value;
+        }
+
         public async Task RefreshTables()
         {
             var tables = await _mocaClient.ExecuteQuery<TableDefinition>("list user tables;");
@@ -64,6 +80,8 @@ namespace JdaTools.Studio.Services
                        
             Commands = commands.OrderBy(c=>c.CommandName);
         }
+
+        
 
     }
 }
