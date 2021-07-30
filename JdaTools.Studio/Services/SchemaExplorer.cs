@@ -17,6 +17,21 @@ namespace JdaTools.Studio.Services
         {
             _mocaClient = mocaClient;
         }
+        private IEnumerable<CommandDefinition> _commands;
+        public IEnumerable<CommandDefinition> Commands
+        {
+            get
+            {
+                //TODO Disabled till we have good IsConnected check for moca client
+                /*if (_tables == null)
+                {
+                    RefreshTables().RunSynchronously();
+                }*/
+                return _commands;
+            }
+            private set => _commands = value;
+        }
+
         public IEnumerable<TableDefinition> Tables
         {
             get
@@ -42,6 +57,12 @@ namespace JdaTools.Studio.Services
                 table.Columns = tableColumns;
             }
             Tables = tables;
+        }
+        public async Task RefreshCommands()
+        {
+            var commands = await _mocaClient.ExecuteQuery<CommandDefinition>("list active commands;");
+                       
+            Commands = commands.OrderBy(c=>c.CommandName);
         }
 
     }

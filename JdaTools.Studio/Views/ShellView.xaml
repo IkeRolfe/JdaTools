@@ -43,7 +43,7 @@
                         <views:TableExplorerView DataContext="{Binding TableExplorerViewModel}"/>
                     </TabItem>
                     <TabItem Header="COMMANDS">
-                        <TextBlock>TODO</TextBlock>
+                        <views:CommandsView DataContext="{Binding CommandsViewModel}"></views:CommandsView>
                     </TabItem>
                 </mah:MetroTabControl>
                 <GridSplitter Grid.Column="1" Margin="2,0,2,0"
