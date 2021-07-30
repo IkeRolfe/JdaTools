@@ -111,5 +111,9 @@ namespace JdaTools.Studio.ViewModels
         
 
         public bool IsEnabled { get => isEnabled; set => SetProperty(ref isEnabled, value); }
+
+        private ICommand executeCommand;
+        public ICommand ExecuteCommand => executeCommand ??= new RelayCommand(ExecuteCurrentTab);
+
     }
 }

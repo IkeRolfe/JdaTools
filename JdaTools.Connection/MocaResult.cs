@@ -97,6 +97,7 @@ namespace JdaTools.Connection
                 }
 
                 dataTable.Rows.Add(fields);
+
             }
 
             return dataTable;
@@ -108,9 +109,9 @@ namespace JdaTools.Connection
             var columnType = columnDef.Type.ToUpper() switch
             {
                 "S" => typeof(string),
-                "I" => nullable ? typeof(int) : typeof(int?),
-                /*"I" => typeof(int),
-                "D" => typeof(DateTime),
+                //"I" => nullable ? typeof(int) : typeof(int?),
+                "I" => typeof(int),
+                /*"D" => typeof(DateTime),
                 "O" => typeof(bool),*/
                 _ => typeof(string)
             };

@@ -54,7 +54,7 @@ namespace JdaTools.Studio.Views
             var schema = Ioc.Default.GetService<SchemaExplorer>();
             var lastWord = backBlocks.Last();
 
-            if (e.Text.LastIndexOf(']') >= e.Text.LastIndexOf('['))
+            if (fullText.LastIndexOf(']') >= fullText.LastIndexOf('['))
             {
                 return; //TODO hand autocomplete with spaces
                 //Autocomplet MOCA                
