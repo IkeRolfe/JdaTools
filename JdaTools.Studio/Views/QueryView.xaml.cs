@@ -46,17 +46,55 @@ namespace JdaTools.Studio.Views
             if (completionWindow != null && completionWindow.CompletionList.CompletionData.Count() == 0)
             {
                 completionWindow?.Close();
-                completionWindow = null;
             }
             var fullText = QueryTextBox.TextArea.Document.Text;
-            
+            var textToCursor = fullText.ToLower().Substring(0,QueryTextBox.CaretOffset);
+            var backBlocks = Regex.Split(fullText.ToLower().Substring(0, QueryTextBox.CaretOffset - 1), @"\s+");
+            var forwardBlocks = Regex.Split(fullText.ToLower().Substring(QueryTextBox.CaretOffset), @"\s+");
+            var schema = Ioc.Default.GetService<SchemaExplorer>();
+            var lastWord = backBlocks.Last();
+
+            if (e.Text.LastIndexOf(']') >= e.Text.LastIndexOf('['))
+            {
+                return; //TODO hand autocomplete with spaces
+                //Autocomplet MOCA                
+                if (completionWindow?.IsVisible ?? false)
+                {
+                    return;
+                }
+                if (lastWord.Length < 3)
+                {
+                    return;
+                }
+                if (completionWindow == null)
+                {
+                    completionWindow = new CompletionWindow(QueryTextBox.TextArea);
+                }
+
+                var commands = schema.Commands.Select(c => c.CommandName).Distinct()
+                    .Where(c => c.StartsWith(lastWord, StringComparison.InvariantCultureIgnoreCase));
+                IList<ICompletionData> data = completionWindow.CompletionList.CompletionData;
+                foreach (var command in commands)
+                {
+                    if (!data.Select(d => d.Text).Contains(command))
+                    {
+                        data.Add(new MyCompletionData(command));
+                    }
+                }
+                completionWindow.Show();
+                completionWindow.Closed += delegate {
+                    completionWindow = null;
+                };
+            }
+
             if (e.Text == " ")
             {
-                var backBlocks = Regex.Split(fullText.ToLower().Substring(0, QueryTextBox.CaretOffset-1), @"\s+");
-                var forwardBlocks = Regex.Split(fullText.ToLower().Substring(QueryTextBox.CaretOffset), @"\s+");
-                var schema = Ioc.Default.GetService<SchemaExplorer>();
+                
+                
 
-                var lastWord = backBlocks.Last().Replace("[", "");
+                //Last position of [ or ] lets us know if we are working sql or moca
+                
+                lastWord = lastWord.Replace("[", "");
                 if (lastWord == "select" || lastWord.LastOrDefault() == ',')
                 {
                     var fromPosition = Array.IndexOf(forwardBlocks, "from");
