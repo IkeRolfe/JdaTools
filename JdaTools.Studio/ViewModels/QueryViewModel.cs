@@ -68,9 +68,24 @@ namespace JdaTools.Studio.ViewModels
             }
             else
             {
-                ResultData = result.MocaResults.GetDataTable();
+                //ResultData = result.MocaResults.GetDataTable();
+                var dt = await ConvertNullValues(result.MocaResults.GetDataTable());
+                ResultData = dt;
             }
             IsBusy = false;
+        }
+        private async Task<DataTable> ConvertNullValues(DataTable dataTable)
+        {
+            List<string> dcNames = dataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
+            foreach(DataRow row in dataTable.Rows)
+            {
+                foreach(string columnName in dcNames)
+                {
+                    row[columnName] = string.IsNullOrEmpty(row[columnName].ToString()) ? "" : row[columnName];
+                }
+            }
+
+            return dataTable;
         }
         private TextDocument queryDocument = new();
         public TextDocument QueryDocument { get => queryDocument; set => SetProperty(ref queryDocument, value); }
