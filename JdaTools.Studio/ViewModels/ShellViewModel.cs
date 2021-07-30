@@ -18,6 +18,8 @@ namespace JdaTools.Studio.ViewModels
         private MocaClient _mocaClient;
         private LoginViewModel _loginViewModel = new LoginViewModel();
         private TableExplorerViewModel _tableExplorerViewModel = new TableExplorerViewModel();
+        private CommandsViewModel _commandsViewModel = new();
+
 
         public ShellViewModel()
         {
@@ -30,6 +32,7 @@ namespace JdaTools.Studio.ViewModels
         {
             LoginVisibility = Visibility.Collapsed;
             TableExplorerViewModel.RefreshCommand.Execute(null);
+            CommandsViewModel.RefreshCommand.Execute(null);
         }
 
         private ObservableCollection<QueryViewModel> _queryViewModels = new ObservableCollection<QueryViewModel>();
@@ -47,7 +50,10 @@ namespace JdaTools.Studio.ViewModels
         {
             get => _tableExplorerViewModel;
         }
-
+        public CommandsViewModel CommandsViewModel
+        {
+            get => _commandsViewModel;
+        }
         private ICommand newEditorCommand;
         public ICommand NewEditorCommand => newEditorCommand ??= new RelayCommand(NewEditor);
 
@@ -102,6 +108,7 @@ namespace JdaTools.Studio.ViewModels
         }
 
         private bool isEnabled;
+        
 
         public bool IsEnabled { get => isEnabled; set => SetProperty(ref isEnabled, value); }
     }

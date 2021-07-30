@@ -145,6 +145,10 @@ namespace JdaTools.Connection
 
         private bool TrySetProperty(object obj, string property, object value)
         {
+            if (value.GetType() == typeof(DBNull))
+            {
+                value = null;
+            }
             var prop = obj.GetType().GetProperty(property, BindingFlags.Public | BindingFlags.Instance);
             if (prop != null && prop.CanWrite)
             {
