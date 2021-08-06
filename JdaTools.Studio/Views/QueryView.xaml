@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JdaTools.Studio.Views" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:viewmodels="clr-namespace:JdaTools.Studio.ViewModels" 
              xmlns:iconpacks="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.Material"
+             xmlns:iconPacks2="http://metro.mahapps.com/winfx/xaml/iconpacks"
              Loaded="UserControl_Loaded"
              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
              
@@ -41,9 +42,23 @@
                   ItemsSource="{Binding ResultData}"
                   AutoGeneratingColumn="ResultsGrid_AutoGeneratingColumn"
                   Style="{StaticResource MahApps.Styles.DataGrid}"
+                  Padding="0,0,0,2"
                   />
-        <StackPanel Orientation="Horizontal" Grid.Row="4" >
-            
+        <StackPanel Orientation="Horizontal" Grid.Row="4"
+                    
+                    Background="{StaticResource MahApps.Brushes.Badged.Background.Disabled}">
+            <ContentControl Margin="2" Focusable="False" HorizontalAlignment="Center">
+                <iconPacks2:PackIconMaterial Kind="{Binding InfoBarIcon}"
+                                            Margin="0"
+                                            Height="15"
+                                            Width="15"
+                                            Spin="{Binding InfoBarIsRotating}"
+                                            SpinDuration="3"
+                                            Focusable="False"
+                                            Foreground="{Binding InfoBarColor}"/>
+            </ContentControl>
+            <TextBlock Text="{Binding InfoBarText}" VerticalAlignment="Center"
+                       Foreground="{StaticResource MahApps.Brushes.Text}"/>
         </StackPanel>
     </Grid>
 </UserControl>
