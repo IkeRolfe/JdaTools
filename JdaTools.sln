@@ -7,7 +7,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JdaTools.Connection", "JdaT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JdaTools.Studio", "JdaTools.Studio\JdaTools.Studio.csproj", "{50AD48EA-EED4-44C6-AFC9-3DC03F6E60C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JdaTools.ConfigurationManager", "JdaTools.ConfigurationManager\JdaTools.ConfigurationManager.csproj", "{0453BFA6-B921-432B-8F5B-47F06439A0BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JdaTools.ConfigurationManager", "JdaTools.ConfigurationManager\JdaTools.ConfigurationManager.csproj", "{0453BFA6-B921-432B-8F5B-47F06439A0BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{34B911C9-B0E6-4694-8A97-52135C11EBE7}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{F51AA0C5-76D8-4F5B-8660-D7ECD5672558}"
+	ProjectSection(SolutionItems) = preProject
+		Moca_ErrorCodes.txt = Moca_ErrorCodes.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +40,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F51AA0C5-76D8-4F5B-8660-D7ECD5672558} = {34B911C9-B0E6-4694-8A97-52135C11EBE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1103DD21-5C92-4DC1-A9C4-189A33058071}
