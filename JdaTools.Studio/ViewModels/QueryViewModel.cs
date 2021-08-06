@@ -20,14 +20,14 @@ namespace JdaTools.Studio.ViewModels
         public QueryViewModel()
         {
             _mocaClient = Ioc.Default.GetService<MocaClient>();
-            SetInfoBar("Circle", "White", false, "");
+            SetInfoBar("Circle", "Gray", false, "");
         }
 
         public QueryViewModel(string query)
         {
             _mocaClient = Ioc.Default.GetService<MocaClient>();
             QueryDocument.Text = query;
-            SetInfoBar("Circle", "White", false, "");
+            SetInfoBar("Circle", "Gray", false, "");
         }
 
         private bool _isBusy;
