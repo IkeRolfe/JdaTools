@@ -110,9 +110,9 @@ namespace JdaTools.Studio.ViewModels
                 {
                     ResultData = result.MocaResults.GetDataTable();
                 }
+                SetInfoBar("Circle", "SpringGreen", false, $"SUCCESS : Returned {ResultData.Rows.Count} Rows");
             }
             IsBusy = false;
-            SetInfoBar("Circle", "SpringGreen", false, $"SUCCESS : Returned {ResultData.Rows.Count} Rows");
         }
         private async Task<DataTable> ConvertNullValues(DataTable dataTable)
         {
