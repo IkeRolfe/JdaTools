@@ -1,5 +1,6 @@
 ﻿using JdaTools.Connection;
 using JdaTools.Studio.Services;
+using JdaTools.Studio.Views;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -26,9 +27,9 @@ namespace JdaTools.Studio.ViewModels
 
         private bool isBusy;
         public bool IsBusy { get => isBusy; set => SetProperty(ref isBusy, value); }
-        public IEnumerable<string> Files => GetFilteredCommands();
+        public IEnumerable<string> Files => GetFilteredFiles();
 
-        private IEnumerable<string> GetFilteredCommands()
+        private IEnumerable<string> GetFilteredFiles()
         {
             IEnumerable<string> commands;
             if (string.IsNullOrEmpty(SearchString))
@@ -53,7 +54,7 @@ namespace JdaTools.Studio.ViewModels
         private async void Refresh()
         {
             IsBusy = true;
-            await _schemaExplorer.RefreshCommands();
+            await _schemaExplorer.RefreshFiles();
             OnPropertyChanged(nameof(Files));
             IsBusy = false;
         }
@@ -70,22 +71,20 @@ namespace JdaTools.Studio.ViewModels
             }
         }
 
-        /*private ICommand generateSelect;
-        public ICommand GenerateSelect => generateSelect ??= new RelayCommand<CommandDefinition>(c => ShowSyntaxCommand(c));
+        private ICommand getFileContentsSelect;
+        public ICommand GetFileContentsCommand => getFileContentsSelect ??= new RelayCommand<string>(c => GetFileContents(c));
 
-        internal void ShowSyntaxCommand(CommandDefinition command)
+        internal async void GetFileContents(string filePath)
         {
             //TODO: Move to messaging service
             var shellView = Ioc.Default.GetService<ShellView>();
             var vm = (ShellViewModel)shellView.DataContext;
-            vm.NewEditor(command.Syntax, false);
+            var response = await _mocaClient.ExecuteQuery("sl_cat file where filename = @filePath",new {filePath});
+            var content = response.MocaResults.GetDataTable().Rows[0]["DATA"].ToString();
+            vm.NewEditor(content, false, filePath);
         }
 
         private object selectedCommand;
         public object SelectedCommand { get => selectedCommand; set => SetProperty(ref selectedCommand, value); }
-
-        private bool isBusy;
-
-        public bool IsBusy { get => isBusy; set => SetProperty(ref isBusy, value); }*/
     }
 }

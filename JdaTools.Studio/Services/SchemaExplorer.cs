@@ -2,6 +2,7 @@
 using JdaTools.Studio.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,7 +82,13 @@ namespace JdaTools.Studio.Services
             Commands = commands.OrderBy(c=>c.CommandName);
         }
 
-        
+        public async Task RefreshFiles()
+        {
+            var response = await _mocaClient.ExecuteQuery("find file where pathname = @@LESDIR || '/src/cmdsrc/*' | { if ( @type = 'D' ) find file where pathname = @pathname || '/*.m*' }");
+            var dt = response.MocaResults.GetDataTable();
+            var files = dt.AsEnumerable().Select(x => x["PATHNAME"].ToString()).ToList();
+            Files = files.OrderBy(x=>x);
+        }
 
     }
 }

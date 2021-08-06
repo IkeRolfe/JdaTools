@@ -50,6 +50,9 @@
                     <TabItem Header="COMMANDS">
                         <views:CommandsView DataContext="{Binding CommandsViewModel}"></views:CommandsView>
                     </TabItem>
+                    <TabItem Header="FILES">
+                        <views:FilesView DataContext="{Binding FilesViewModel}"></views:FilesView>
+                    </TabItem>
                 </mah:MetroTabControl>
                 <GridSplitter Grid.Column="1" Margin="2,0,2,0"
                   Width="3" 

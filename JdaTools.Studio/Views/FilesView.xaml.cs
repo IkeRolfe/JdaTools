@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JdaTools.Studio.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,12 @@ namespace JdaTools.Studio.Views
 
             BindingExpression binding = BindingOperations.GetBindingExpression(tBox, prop);
             if (binding != null) { binding.UpdateSource(); }
+        }
+
+        private void FilesListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var filePath = ((ListViewItem)sender).Content as string;
+            (DataContext as FilesViewModel).GetFileContents(filePath);
         }
     }
 }

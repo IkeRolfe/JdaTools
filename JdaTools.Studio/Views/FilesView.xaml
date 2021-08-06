@@ -22,13 +22,17 @@
             </Grid.ColumnDefinitions>
             <TextBox Grid.Row="0" MinWidth="100"
                  KeyUp="TextBox_KeyEnterUpdate"
-                     mah:TextBoxHelper.Watermark="search commands"
+                     mah:TextBoxHelper.Watermark="search files"
                  Text="{Binding SearchString}"/>
             <Button Grid.Column="1"                    
                 Content="{iconpacks:Material Kind=Replay}" HorizontalAlignment="Right" Command="{Binding RefreshCommand}"/>
         </Grid>
-        <ListView Grid.Row="1" x:Name="CommandsListView" ItemsSource="{Binding Commands}">
-
+        <ListView Grid.Row="1" x:Name="FilesListView" ItemsSource="{Binding Files}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
+                    <EventSetter Event="MouseDoubleClick" Handler="FilesListView_MouseDoubleClick" />
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
     </Grid>
 </UserControl>
