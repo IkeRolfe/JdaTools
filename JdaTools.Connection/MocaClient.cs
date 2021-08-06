@@ -20,6 +20,7 @@ namespace JdaTools.Connection
         private MocaHttpHandler _httpHandler;
         private MocaRequestFactory _mocaRequestFactory;
         private string _endpoint;
+        private MocaCredentials _credentialsCache;
 
         public MocaClient(string endpoint)
         {
@@ -44,6 +45,7 @@ namespace JdaTools.Connection
 
         public async Task<MocaResponse> ConnectAsync(MocaCredentials credentials)
         {
+            _credentialsCache = credentials; //TODO: Yeah I know this is plain text cache in memory
             var loginRequest = MocaRequestFactory.GetLoginQuery(credentials);
             var response = await PostAsync(loginRequest);
             var sessionKey = response.MocaResults.GetDataTable().Rows[0]["session_key"];
@@ -67,9 +69,10 @@ namespace JdaTools.Connection
 
             var mySerializer = new XmlSerializer(typeof(MocaResponse));
             var stream = await result.Content.ReadAsStreamAsync();
+            var text = await result.Content.ReadAsStringAsync();
             var response = (MocaResponse)mySerializer.Deserialize(stream);
             //var dt = response.MocaResults.GetDataTable();
-            //var row = dt.Rows[0];
+            //var row = dt.Rows[0];           
             return response;
         }
 
@@ -77,6 +80,14 @@ namespace JdaTools.Connection
         {
             var request = _mocaRequestFactory.Get(query, parameters);
             var response = await PostAsync(request);
+            //Check if logged in
+            if (response.status == 523)
+            {
+                var connectResponse = await ConnectAsync(_credentialsCache); //TODO handle auth error
+                //Need to generate request again since it has session id
+                request = _mocaRequestFactory.Get(query, parameters);
+                response = await PostAsync(request);
+            }
             return response;
         }
 
@@ -145,6 +156,10 @@ namespace JdaTools.Connection
 
         private bool TrySetProperty(object obj, string property, object value)
         {
+            if (value.GetType() == typeof(DBNull))
+            {
+                value = null;
+            }
             var prop = obj.GetType().GetProperty(property, BindingFlags.Public | BindingFlags.Instance);
             if (prop != null && prop.CanWrite)
             {

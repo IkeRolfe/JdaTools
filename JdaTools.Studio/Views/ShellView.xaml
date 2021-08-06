@@ -11,6 +11,11 @@
     <Window.DataContext>
         <viewmodels:ShellViewModel/>
     </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Control"
+                    Key="N"
+                    Command="{Binding NewEditorCommand}" />
+    </Window.InputBindings>
     
     <Grid>
         <Grid IsEnabled="{Binding IsEnabled}">
@@ -43,7 +48,10 @@
                         <views:TableExplorerView DataContext="{Binding TableExplorerViewModel}"/>
                     </TabItem>
                     <TabItem Header="COMMANDS">
-                        <TextBlock>TODO</TextBlock>
+                        <views:CommandsView DataContext="{Binding CommandsViewModel}"></views:CommandsView>
+                    </TabItem>
+                    <TabItem Header="FILES">
+                        <views:FilesView DataContext="{Binding FilesViewModel}"></views:FilesView>
                     </TabItem>
                 </mah:MetroTabControl>
                 <GridSplitter Grid.Column="1" Margin="2,0,2,0"
@@ -57,9 +65,9 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="{iconpacks:Material Kind=Play}" Foreground="Green" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
-                        <Button Content="{iconpacks:Material Kind=ContentSave}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
-                        <Button Content="{iconpacks:Material Kind=FolderOpen}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
-                        <Button Content="{iconpacks:FontAwesome Kind=RouteSolid}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
+                        <Button IsEnabled = "false" Content="{iconpacks:Material Kind=ContentSave}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
+                        <Button IsEnabled = "false" Content="{iconpacks:Material Kind=FolderOpen}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
+                        <Button IsEnabled = "false" Content="{iconpacks:FontAwesome Kind=RouteSolid}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
                         <Button Content="{iconpacks:Material Kind=TabPlus}" Foreground="DarkKhaki" Command="{Binding NewEditorCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
                     </StackPanel>
                     <DockingManager Grid.Row="1" DocumentsSource="{Binding QueryViewModels}" 

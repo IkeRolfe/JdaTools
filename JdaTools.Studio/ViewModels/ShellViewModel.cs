@@ -10,18 +10,24 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Windows;
+using JdaTools.Studio.Services;
 
 namespace JdaTools.Studio.ViewModels
 {
     class ShellViewModel : ObservableObject
     {
         private MocaClient _mocaClient;
+        private SchemaExplorer _schemaExplorer;
         private LoginViewModel _loginViewModel = new LoginViewModel();
         private TableExplorerViewModel _tableExplorerViewModel = new TableExplorerViewModel();
+        private CommandsViewModel _commandsViewModel = new();
+        private FilesViewModel _filesViewModel = new();
+
 
         public ShellViewModel()
         {
             _mocaClient = Ioc.Default.GetService<MocaClient>();
+            _schemaExplorer = Ioc.Default.GetService<SchemaExplorer>();
             QueryViewModels.Add(new QueryViewModel());
             LoginViewModel.LoginCompleteAction = new Action(() => OnLoginComplete());
         }
@@ -29,7 +35,11 @@ namespace JdaTools.Studio.ViewModels
         private void OnLoginComplete()
         {
             LoginVisibility = Visibility.Collapsed;
+            //Refresh jda schema TODO: move to messaging center
             TableExplorerViewModel.RefreshCommand.Execute(null);
+            CommandsViewModel.RefreshCommand.Execute(null);
+            FilesViewModel.RefreshCommand.Execute(null);
+            
         }
 
         private ObservableCollection<QueryViewModel> _queryViewModels = new ObservableCollection<QueryViewModel>();
@@ -47,6 +57,14 @@ namespace JdaTools.Studio.ViewModels
         {
             get => _tableExplorerViewModel;
         }
+        public CommandsViewModel CommandsViewModel
+        {
+            get => _commandsViewModel;
+        }
+        public FilesViewModel FilesViewModel
+        {
+            get => _filesViewModel;
+        }
 
         private ICommand newEditorCommand;
         public ICommand NewEditorCommand => newEditorCommand ??= new RelayCommand(NewEditor);
@@ -58,9 +76,13 @@ namespace JdaTools.Studio.ViewModels
             SelectedEditor = vm;
         }
 
-        internal void NewEditor(string query, bool execute = false)
+        internal void NewEditor(string query, bool execute = false, string title = null)
         {
             var vm = new QueryViewModel(query);
+            if (title != null)
+            {
+                vm.Title = title;
+            }
             QueryViewModels.Add(vm);
             SelectedEditor = vm;
             if (execute)
@@ -102,7 +124,12 @@ namespace JdaTools.Studio.ViewModels
         }
 
         private bool isEnabled;
+        
 
         public bool IsEnabled { get => isEnabled; set => SetProperty(ref isEnabled, value); }
+
+        private ICommand executeCommand;
+        public ICommand ExecuteCommand => executeCommand ??= new RelayCommand(ExecuteCurrentTab);
+
     }
 }

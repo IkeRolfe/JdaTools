@@ -97,21 +97,21 @@ namespace JdaTools.Connection
                 }
 
                 dataTable.Rows.Add(fields);
+
             }
 
             return dataTable;
-        }
-
+        } 
         private Type GetColumnType(Column columnDef)
         {
             var nullable = columnDef.Nullable;
             var columnType = columnDef.Type.ToUpper() switch
             {
-                /*"S" => typeof(string),
+                "S" => typeof(string),
                 //"I" => nullable ? typeof(int) : typeof(int?),
                 "I" => typeof(int),
-                "D" => typeof(DateTime),
-                "O" => typeof(bool),*/
+                //"D" => typeof(DateTime),
+                "O" => typeof(bool),
                 _ => typeof(string)
             };
             return columnType;

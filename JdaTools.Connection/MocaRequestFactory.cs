@@ -40,7 +40,7 @@ namespace JdaTools.Connection
             {
                 Environment = new MocaRequestVar[]
                 {
-                    new MocaRequestVar("DEVCOD", "TEST"),
+                    new MocaRequestVar("DEVCOD", "JDA STUDIO"),
                     new MocaRequestVar("LOCALE_ID", "US_ENGLISH"),
                 },
                 Context = new MocaParameter[]
@@ -48,7 +48,6 @@ namespace JdaTools.Connection
                     new MocaParameter("usr_id",credentials.UserName),
                     new MocaParameter("usr_pswd", credentials.Password)
                 },
-                //TODO paramatarize to prevent injection
                 Query = @"login user where usr_id = @usr_id and usr_pswd = @usr_pswd"
             };
         }

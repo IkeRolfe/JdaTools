@@ -1,0 +1,3 @@
+501: Command not found
+529: Must be logged in
+540: Maximum rows exceeded in query.
