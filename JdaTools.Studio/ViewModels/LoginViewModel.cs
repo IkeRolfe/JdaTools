@@ -96,6 +96,13 @@ namespace JdaTools.Studio.ViewModels
             _mocaClient.Endpoint = Endpoint;
             await SaveConnection();
             var mocaResponse = await _mocaClient.ConnectAsync(new MocaCredentials(UserName, Password));
+            if (mocaResponse.status != 0)
+            {
+                UserName = string.Empty;
+                Password = string.Empty;
+                //TODO show login fail
+                return;
+            }
             LoginCompleteAction?.Invoke();
                     
         }

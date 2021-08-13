@@ -48,9 +48,11 @@ namespace JdaTools.Connection
             _credentialsCache = credentials; //TODO: Yeah I know this is plain text cache in memory
             var loginRequest = MocaRequestFactory.GetLoginQuery(credentials);
             var response = await PostAsync(loginRequest);
-            var sessionKey = response.MocaResults.GetDataTable().Rows[0]["session_key"];
-            _mocaRequestFactory = new MocaRequestFactory(sessionKey.ToString());
-
+            if (response.status == 0)
+            {
+                var sessionKey = response.MocaResults.GetDataTable().Rows[0]["session_key"];
+                _mocaRequestFactory = new MocaRequestFactory(sessionKey.ToString());
+            }
             return response;
         }
         public async Task<MocaResponse> Logout() 
