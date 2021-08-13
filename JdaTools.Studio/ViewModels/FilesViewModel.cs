@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace JdaTools.Studio.ViewModels
 {
-    class FilesViewModel : ObservableObject
+    public class FilesViewModel : ViewModelBase
     {
         private MocaClient _mocaClient;
         private SchemaExplorer _schemaExplorer;
@@ -55,7 +55,7 @@ namespace JdaTools.Studio.ViewModels
         {
             IsBusy = true;
             await _schemaExplorer.RefreshFiles();
-            OnPropertyChanged(nameof(Files));
+            NotifyOfPropertyChange(nameof(Files));
             IsBusy = false;
         }
 
@@ -67,7 +67,7 @@ namespace JdaTools.Studio.ViewModels
             set
             {
                 SetProperty(ref _searchString, value);
-                OnPropertyChanged(nameof(Files));
+                NotifyOfPropertyChange(nameof(Files));
             }
         }
 
@@ -77,11 +77,12 @@ namespace JdaTools.Studio.ViewModels
         internal async void GetFileContents(string filePath)
         {
             //TODO: Move to messaging service
-            var shellView = Ioc.Default.GetService<ShellView>();
+            var shellView = App.Current.MainWindow;
             var vm = (ShellViewModel)shellView.DataContext;
-            var response = await _mocaClient.ExecuteQuery("sl_cat file where filename = @filePath",new {filePath});
+            var response = await _mocaClient.ExecuteQuery("download file where filename = @filePath",new {filePath});
             var content = response.MocaResults.GetDataTable().Rows[0]["DATA"].ToString();
-            vm.NewEditor(content, false, filePath);
+            var text = Encoding.UTF8.GetString(Convert.FromBase64String(content));
+            vm.NewEditor(text, false, filePath);
         }
 
         private object selectedCommand;

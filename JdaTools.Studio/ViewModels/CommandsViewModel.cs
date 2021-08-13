@@ -20,7 +20,7 @@ namespace JdaTools.Studio.ViewModels
     using JdaTools.Studio.Services;
     using JdaTools.Studio.Models;
     using JdaTools.Studio.Views;
-    class CommandsViewModel : ObservableObject
+    public class CommandsViewModel : ViewModelBase
     {
         private MocaClient _mocaClient;
         private SchemaExplorer _schemaExplorer;
@@ -61,7 +61,7 @@ namespace JdaTools.Studio.ViewModels
         {
             IsBusy = true;
             await _schemaExplorer.RefreshCommands();
-            OnPropertyChanged(nameof(Commands));
+            NotifyOfPropertyChange(nameof(Commands));
             IsBusy = false;
         }
 
@@ -73,7 +73,7 @@ namespace JdaTools.Studio.ViewModels
             set
             {
                 SetProperty(ref _searchString, value);
-                OnPropertyChanged(nameof(Commands));
+                NotifyOfPropertyChange(nameof(Commands));
             }
         }
 

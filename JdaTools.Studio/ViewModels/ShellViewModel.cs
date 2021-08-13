@@ -11,10 +11,13 @@ using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Windows;
 using JdaTools.Studio.Services;
+using Caliburn.Micro;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace JdaTools.Studio.ViewModels
 {
-    class ShellViewModel : ObservableObject
+    public class ShellViewModel : ViewModelBase
     {
         private MocaClient _mocaClient;
         private SchemaExplorer _schemaExplorer;
@@ -29,14 +32,14 @@ namespace JdaTools.Studio.ViewModels
             _mocaClient = Ioc.Default.GetService<MocaClient>();
             _schemaExplorer = Ioc.Default.GetService<SchemaExplorer>();
             QueryViewModels.Add(new QueryViewModel());
-            LoginViewModel.LoginCompleteAction = new Action(() => OnLoginComplete());
+            LoginViewModel.LoginCompleteAction = new System.Action(() => OnLoginComplete());
         }
 
         private void OnLoginComplete()
         {
             LoginVisibility = Visibility.Collapsed;
             //Refresh jda schema TODO: move to messaging center
-            TableExplorerViewModel.RefreshCommand.Execute(null);
+            TableExplorer.RefreshCommand.Execute(null);
             CommandsViewModel.RefreshCommand.Execute(null);
             FilesViewModel.RefreshCommand.Execute(null);
             
@@ -53,7 +56,7 @@ namespace JdaTools.Studio.ViewModels
         {
             get => _loginViewModel;
         }
-        public TableExplorerViewModel TableExplorerViewModel
+        public TableExplorerViewModel TableExplorer
         {
             get => _tableExplorerViewModel;
         }
@@ -130,6 +133,8 @@ namespace JdaTools.Studio.ViewModels
 
         private ICommand executeCommand;
         public ICommand ExecuteCommand => executeCommand ??= new RelayCommand(ExecuteCurrentTab);
+
+        
 
     }
 }

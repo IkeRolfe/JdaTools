@@ -12,10 +12,11 @@ using Microsoft.Toolkit.Mvvm.Input;
 using JdaTools.Studio.Services;
 using JdaTools.Studio.Models;
 using JdaTools.Studio.Views;
+using Caliburn.Micro;
 
 namespace JdaTools.Studio.ViewModels
 {
-    public class TableExplorerViewModel : ObservableObject
+    public class TableExplorerViewModel : ViewModelBase
     {
         private MocaClient _mocaClient;
         private SchemaExplorer _schemaExplorer;
@@ -51,7 +52,7 @@ namespace JdaTools.Studio.ViewModels
         {
             IsBusy = true;
             await _schemaExplorer.RefreshTables();
-            OnPropertyChanged(nameof(Tables));
+            NotifyOfPropertyChange(nameof(Tables));
             IsBusy = false;
         }
 
@@ -62,8 +63,8 @@ namespace JdaTools.Studio.ViewModels
             get => _searchString;
             set
             {
-                SetProperty(ref _searchString, value);
-                OnPropertyChanged(nameof(Tables));
+                _searchString = value;
+                NotifyOfPropertyChange(nameof(Tables));
             }
         }
 
@@ -83,6 +84,14 @@ namespace JdaTools.Studio.ViewModels
 
         private bool isBusy;
 
-        public bool IsBusy { get => isBusy; set => SetProperty(ref isBusy, value); }
+        public bool IsBusy
+        {
+            get => isBusy;
+            set
+            {
+                isBusy = value;
+                NotifyOfPropertyChange(() => IsBusy);
+            }
+        }
     }
 }

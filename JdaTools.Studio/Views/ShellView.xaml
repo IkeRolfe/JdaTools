@@ -8,9 +8,6 @@
         mc:Ignorable="d"
                   xmlns:iconpacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         Title="JDA EXPLORER" Height="450" Width="800">
-    <Window.DataContext>
-        <viewmodels:ShellViewModel/>
-    </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding Modifiers="Control"
                     Key="N"
@@ -45,7 +42,7 @@
                         </Style>
                     </TabControl.Resources>
                     <TabItem Header="TABLES">
-                        <views:TableExplorerView DataContext="{Binding TableExplorerViewModel}"/>
+                        <ContentControl x:Name="TableExplorer"/>
                     </TabItem>
                     <TabItem Header="COMMANDS">
                         <views:CommandsView DataContext="{Binding CommandsViewModel}"></views:CommandsView>
