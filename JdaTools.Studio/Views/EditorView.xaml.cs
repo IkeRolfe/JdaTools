@@ -23,9 +23,9 @@ namespace JdaTools.Studio.Views
     /// <summary>
     /// Interaction logic for QueryView.xaml
     /// </summary>
-    public partial class QueryView : UserControl
+    public partial class EditorView : UserControl
     {
-        public QueryView()
+        public EditorView()
         {
             InitializeComponent();
         }

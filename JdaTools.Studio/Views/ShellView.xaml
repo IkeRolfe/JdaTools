@@ -68,7 +68,7 @@
                         <Button IsEnabled = "false" Content="{iconpacks:FontAwesome Kind=RouteSolid}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
                         <Button Content="{iconpacks:Material Kind=TabPlus}" Foreground="DarkKhaki" Command="{Binding NewEditorCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
                     </StackPanel>
-                    <DockingManager Grid.Row="1" x:Name="QueryViewModels" DocumentsSource="{Binding QueryViewModels}">
+                    <DockingManager Grid.Row="1" x:Name="Editors" DocumentsSource="{Binding QueryViewModels}">
                         <DockingManager.DocumentHeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Content.Title}"/>
@@ -80,21 +80,6 @@
                         </DataTemplate>
                         </DockingManager.LayoutItemTemplate>
                     </DockingManager>
-                    <!--
-                        <DockingManager Grid.Row="1" DocumentsSource="{Binding QueryViewModels}" 
-                                ActiveContent="{Binding SelectedEditor, Mode=TwoWay}">
-                            <DockingManager.DocumentHeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Content.Title}"/>
-                                </DataTemplate>
-                            </DockingManager.DocumentHeaderTemplate>
-                            <DockingManager.LayoutItemTemplate>
-                                <DataTemplate>
-                                    <views:QueryView DataContext="{Binding Content}"></views:QueryView>
-                                </DataTemplate>
-                            </DockingManager.LayoutItemTemplate>
-                        </DockingManager>
-                    -->
                 </Grid>
             </Grid>
         </Grid>

@@ -31,7 +31,7 @@ namespace JdaTools.Studio.ViewModels
         {
             _mocaClient = Ioc.Default.GetService<MocaClient>();
             _schemaExplorer = Ioc.Default.GetService<SchemaExplorer>();
-            QueryViewModels.Add(new QueryViewModel());
+            Editors.Add(new EditorViewModel());
             LoginViewModel.LoginCompleteAction = new System.Action(() => OnLoginComplete());
         }
         
@@ -45,12 +45,12 @@ namespace JdaTools.Studio.ViewModels
             
         }
 
-        private ObservableCollection<QueryViewModel> _queryViewModels = new ObservableCollection<QueryViewModel>();
+        private ObservableCollection<EditorViewModel> _editors = new ObservableCollection<EditorViewModel>();
 
-        public ObservableCollection<QueryViewModel> QueryViewModels
+        public ObservableCollection<EditorViewModel> Editors
         {
-            get => _queryViewModels;
-            set => SetProperty(ref _queryViewModels, value);
+            get => _editors;
+            set => SetProperty(ref _editors, value);
         }
         public LoginViewModel LoginViewModel
         {
@@ -74,19 +74,19 @@ namespace JdaTools.Studio.ViewModels
 
         internal void NewEditor()
         {
-            var vm = new QueryViewModel();
-            QueryViewModels.Add(vm);
+            var vm = new EditorViewModel();
+            Editors.Add(vm);
             SelectedEditor = vm;
         }
 
         internal void NewEditor(string query, bool execute = false, string title = null)
         {
-            var vm = new QueryViewModel(query);
+            var vm = new EditorViewModel(query);
             if (title != null)
             {
                 vm.Title = title;
             }
-            QueryViewModels.Add(vm);
+            Editors.Add(vm);
             SelectedEditor = vm;
             if (execute)
             {
@@ -94,8 +94,8 @@ namespace JdaTools.Studio.ViewModels
             }
         }
 
-        private QueryViewModel _selectedEditor;
-        public QueryViewModel SelectedEditor { get => _selectedEditor; set => SetProperty(ref _selectedEditor, value); }
+        private EditorViewModel _selectedEditor;
+        public EditorViewModel SelectedEditor { get => _selectedEditor; set => SetProperty(ref _selectedEditor, value); }
         //TODO: to bool with coverter
         private Visibility loginVisibility = Visibility.Visible;
         public Visibility LoginVisibility

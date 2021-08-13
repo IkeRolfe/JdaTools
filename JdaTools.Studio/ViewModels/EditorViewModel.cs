@@ -13,17 +13,17 @@ using ICSharpCode.AvalonEdit.Document;
 
 namespace JdaTools.Studio.ViewModels
 {
-    public class QueryViewModel : ViewModelBase
+    public class EditorViewModel : ViewModelBase
     {
         private MocaClient _mocaClient;
 
-        public QueryViewModel()
+        public EditorViewModel()
         {
             _mocaClient = Ioc.Default.GetService<MocaClient>();
             SetInfoBar("Circle", "Gray", false, "");
         }
 
-        public QueryViewModel(string query)
+        public EditorViewModel(string query)
         {
             _mocaClient = Ioc.Default.GetService<MocaClient>();
             QueryDocument.Text = query;
