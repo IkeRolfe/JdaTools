@@ -13,7 +13,7 @@ using ICSharpCode.AvalonEdit.Document;
 
 namespace JdaTools.Studio.ViewModels
 {
-    class QueryViewModel : ObservableObject
+    public class QueryViewModel : ViewModelBase
     {
         private MocaClient _mocaClient;
 

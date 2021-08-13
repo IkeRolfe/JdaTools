@@ -12,7 +12,7 @@ using JdaTools.ConfigurationManager;
 
 namespace JdaTools.Studio.ViewModels
 {
-    public class LoginViewModel : ObservableObject
+    public class LoginViewModel : ViewModelBase
     {
         private MocaClient _mocaClient;
         private string _userName;
