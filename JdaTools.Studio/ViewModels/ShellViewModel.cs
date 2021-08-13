@@ -34,7 +34,7 @@ namespace JdaTools.Studio.ViewModels
             QueryViewModels.Add(new QueryViewModel());
             LoginViewModel.LoginCompleteAction = new System.Action(() => OnLoginComplete());
         }
-
+        
         private void OnLoginComplete()
         {
             LoginVisibility = Visibility.Collapsed;

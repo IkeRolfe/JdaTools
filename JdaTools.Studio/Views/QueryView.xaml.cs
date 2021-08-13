@@ -43,7 +43,7 @@ namespace JdaTools.Studio.Views
         CompletionWindow completionWindow;
         private void textEditor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
         {
-            if (completionWindow != null && completionWindow.CompletionList.CompletionData.Count() == 0)
+            if (completionWindow != null && !completionWindow.CompletionList.CompletionData.Any())
             {
                 completionWindow?.Close();
             }

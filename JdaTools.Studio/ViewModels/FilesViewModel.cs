@@ -48,10 +48,10 @@ namespace JdaTools.Studio.ViewModels
             return commands?.Take(100);
         }
 
-        private ICommand refreshCommand;
-        public ICommand RefreshCommand => refreshCommand ??= new RelayCommand(Refresh);
+        private ICommand _refreshCommand;
+        public ICommand RefreshCommand => _refreshCommand ??= new RelayCommand(RefreshFiles);
 
-        private async void Refresh()
+        private async void RefreshFiles()
         {
             IsBusy = true;
             await _schemaExplorer.RefreshFiles();
@@ -71,8 +71,8 @@ namespace JdaTools.Studio.ViewModels
             }
         }
 
-        private ICommand getFileContentsSelect;
-        public ICommand GetFileContentsCommand => getFileContentsSelect ??= new RelayCommand<string>(c => GetFileContents(c));
+        private ICommand _getFileContentsSelect;
+        public ICommand GetFileContentsCommand => _getFileContentsSelect ??= new RelayCommand<string>(c => GetFileContents(c));
 
         internal async void GetFileContents(string filePath)
         {

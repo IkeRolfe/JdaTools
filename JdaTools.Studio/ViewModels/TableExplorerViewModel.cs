@@ -74,7 +74,7 @@ namespace JdaTools.Studio.ViewModels
         internal void PerformGenerateSelect(string tableName)
         {
             //TODO: Move to messaging service
-            var shellView = Ioc.Default.GetService<ShellView>();
+            var shellView = App.Current.MainWindow;
             var vm = (ShellViewModel)shellView.DataContext;
             vm.NewEditor($"[select top 100 * from {tableName}]", true);
         }
