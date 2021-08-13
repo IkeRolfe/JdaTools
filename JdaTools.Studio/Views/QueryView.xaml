@@ -44,11 +44,16 @@
                   Style="{StaticResource MahApps.Styles.DataGrid}"
                   Padding="0,0,0,2"
                   />
-        <StackPanel Orientation="Horizontal" Grid.Row="4"
-                    
-                    Background="{StaticResource MahApps.Brushes.Badged.Background.Disabled}">
-            <ContentControl Margin="2" Focusable="False" HorizontalAlignment="Center">
-                <iconPacks2:PackIconMaterial Kind="{Binding InfoBarIcon}"
+        <StackPanel Orientation="Vertical" Grid.Row="4">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Height="2" Stretch="UniformToFill"
+                           Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}}"
+                           Fill="{StaticResource MahApps.Brushes.Button.Border}">
+                </Rectangle>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Background="{StaticResource MahApps.Brushes.Control.Background}">
+                <ContentControl Margin="2" Focusable="False" HorizontalAlignment="Center">
+                    <iconPacks2:PackIconMaterial Kind="{Binding InfoBarIcon}"
                                             Margin="0"
                                             Height="15"
                                             Width="15"
@@ -56,9 +61,10 @@
                                             SpinDuration="3"
                                             Focusable="False"
                                             Foreground="{Binding InfoBarColor}"/>
-            </ContentControl>
-            <TextBlock Text="{Binding InfoBarText}" VerticalAlignment="Center"
+                </ContentControl>
+                <TextBlock Text="{Binding InfoBarText}" VerticalAlignment="Center"
                        Foreground="{StaticResource MahApps.Brushes.Text}"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>
