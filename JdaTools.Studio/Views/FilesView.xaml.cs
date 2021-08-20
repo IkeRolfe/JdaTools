@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using JdaTools.Studio.Models;
 
 namespace JdaTools.Studio.Views
 {
@@ -37,8 +38,8 @@ namespace JdaTools.Studio.Views
 
         private void FilesListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var filePath = ((ListViewItem)sender).Content as string;
-            (DataContext as FilesViewModel).GetFileContents(filePath);
+            var file = ((ListViewItem)sender).Content as MocaFile;
+            (DataContext as FilesViewModel).GetFileContents(file);
         }
     }
 }

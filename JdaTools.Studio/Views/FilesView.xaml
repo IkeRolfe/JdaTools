@@ -33,6 +33,14 @@
                     <EventSetter Event="MouseDoubleClick" Handler="FilesListView_MouseDoubleClick" />
                 </Style>
             </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <ContentControl Content="{Binding Converter={StaticResource FileToContentConverter}}" Margin="5 0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding FileName}" Background="Transparent"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
     </Grid>
 </UserControl>

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using JdaTools.Studio.Models;
 
 namespace JdaTools.Studio.ViewModels
 {
@@ -27,25 +28,26 @@ namespace JdaTools.Studio.ViewModels
 
         private bool isBusy;
         public bool IsBusy { get => isBusy; set => SetProperty(ref isBusy, value); }
-        public IEnumerable<string> Files => GetFilteredFiles();
+        private IEnumerable<MocaFile> _files;
+        public IEnumerable<MocaFile> Files => GetFilteredFiles();
 
-        private IEnumerable<string> GetFilteredFiles()
+        private IEnumerable<MocaFile> GetFilteredFiles()
         {
-            IEnumerable<string> commands;
+            IEnumerable<MocaFile> files;
             if (string.IsNullOrEmpty(SearchString))
             {
-                commands = _schemaExplorer.Files;
+                files = _files;
             }
             else if (SearchString?.FirstOrDefault() == '^')
             {
-                commands = _schemaExplorer.Files?.Where(t => t.StartsWith(SearchString, StringComparison.InvariantCultureIgnoreCase));
+                files = _files?.Where(t => t.FileName.StartsWith(SearchString, StringComparison.InvariantCultureIgnoreCase));
             }
             else
             {
-                commands = _schemaExplorer.Files?.Where(t => t.Contains(SearchString, StringComparison.InvariantCultureIgnoreCase)); //Apply filter from search
+                files = _files?.Where(t => t.FileName.Contains(SearchString, StringComparison.InvariantCultureIgnoreCase)); //Apply filter from search
             }
             //TODO add pagination listview with 10,000 items is slow
-            return commands?.Take(100);
+            return files?.OrderBy(f => f.Type).ThenBy(f => f.FileName);
         }
 
         private ICommand _refreshCommand;
@@ -54,7 +56,7 @@ namespace JdaTools.Studio.ViewModels
         private async void RefreshFiles()
         {
             IsBusy = true;
-            await _schemaExplorer.RefreshFiles();
+            _files = await _schemaExplorer.GetDirectory();
             NotifyOfPropertyChange(nameof(Files));
             IsBusy = false;
         }
@@ -72,9 +74,28 @@ namespace JdaTools.Studio.ViewModels
         }
 
         private ICommand _getFileContentsSelect;
-        public ICommand GetFileContentsCommand => _getFileContentsSelect ??= new RelayCommand<string>(c => GetFileContents(c));
+        public ICommand GetFileContentsCommand => _getFileContentsSelect ??= new RelayCommand<MocaFile>(c => GetFileContents(c));
 
-        internal async void GetFileContents(string filePath)
+        internal async void GetFileContents(MocaFile file)
+        {
+            switch (file.Type)
+            {
+                case "F":
+                    OpenFile(file.PathName);
+                    return;
+                case "D":
+                    OpenDirectory(file.PathName);
+                    return;
+            }
+        }
+
+        internal async void OpenDirectory(string filePath)
+        {
+            _files = await _schemaExplorer.GetDirectory(filePath);
+            NotifyOfPropertyChange(nameof(Files));
+        }
+
+        internal async void OpenFile(string filePath)
         {
             //TODO: Move to messaging service
             var shellView = App.Current.MainWindow;

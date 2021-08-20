@@ -95,7 +95,16 @@ namespace JdaTools.Studio.ViewModels
         }
 
         private EditorViewModel _selectedEditor;
-        public EditorViewModel SelectedEditor { get => _selectedEditor; set => SetProperty(ref _selectedEditor, value); }
+        public EditorViewModel SelectedEditor
+        {
+            get => _selectedEditor;
+            set
+            {
+                _selectedEditor = value;
+                NotifyOfPropertyChange(()=>SelectedEditor);
+            }
+        }
+
         //TODO: to bool with coverter
         private Visibility loginVisibility = Visibility.Visible;
         public Visibility LoginVisibility

@@ -93,9 +93,9 @@ namespace JdaTools.Connection
             return response;
         }
 
-        public async Task<IEnumerable<T>> ExecuteQuery<T>(string query) 
+        public async Task<IEnumerable<T>> ExecuteQuery<T>(string query, object parameters = null) 
         {
-            var response = await ExecuteQuery(query);
+            var response = await ExecuteQuery(query, parameters);
             var dt = response.MocaResults.GetDataTable();
             var type = typeof(T);
 

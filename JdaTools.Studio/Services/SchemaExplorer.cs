@@ -87,7 +87,31 @@ namespace JdaTools.Studio.Services
             var response = await _mocaClient.ExecuteQuery("find file where pathname = @@LESDIR || '/src/cmdsrc/*' | { if ( @type = 'D' ) find file where pathname = @pathname || '/*.m*' }");
             var dt = response.MocaResults.GetDataTable();
             var files = dt.AsEnumerable().Select(x => x["PATHNAME"].ToString()).ToList();
+
             Files = files.OrderBy(x=>x);
+        }
+
+        public async Task<IEnumerable<MocaFile>> GetDirectory(string path = null)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                var files = await _mocaClient.ExecuteQuery<MocaFile>("find file where pathname = @@LESDIR || '/src/cmdsrc/*'");
+                return files;
+            }
+            else
+            {
+                var files = new List<MocaFile>();
+                var previousDir = new MocaFile()
+                {
+                    FileName = "..",
+                    PathName = path.Substring(0, path.LastIndexOf('\\')),
+                    Type = "D"
+                };
+                files.Add(previousDir);
+                var dirFiles = await _mocaClient.ExecuteQuery<MocaFile>("find file where pathname = @path || '/*'", new {path});
+                files.AddRange(dirFiles);
+                return files;
+            }
         }
 
     }

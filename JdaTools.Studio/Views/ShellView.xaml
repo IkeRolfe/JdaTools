@@ -67,8 +67,11 @@
                         <Button IsEnabled = "false" Content="{iconpacks:Material Kind=FolderOpen}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
                         <Button IsEnabled = "false" Content="{iconpacks:FontAwesome Kind=RouteSolid}" Command="{Binding ExecuteCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
                         <Button Content="{iconpacks:Material Kind=TabPlus}" Foreground="DarkKhaki" Command="{Binding NewEditorCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
+                        <Button Content="{iconpacks:Material Kind=UploadOutline}" Command="{Binding NewEditorCommand}" Style="{StaticResource MahApps.Styles.Button.ToolBar}"/>
                     </StackPanel>
-                    <DockingManager Grid.Row="1" x:Name="Editors" DocumentsSource="{Binding QueryViewModels}">
+                    <DockingManager Grid.Row="1" x:Name="Editors" DocumentsSource="{Binding Editors}" 
+                                    ActiveContent="{Binding SelectedEditor, Mode=TwoWay}" 
+                                    ActiveContentChanged="Editors_OnActiveContentChanged">
                         <DockingManager.DocumentHeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Content.Title}"/>

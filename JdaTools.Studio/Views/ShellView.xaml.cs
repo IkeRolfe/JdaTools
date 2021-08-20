@@ -24,10 +24,10 @@ namespace JdaTools.Studio.Views
         {
             InitializeComponent();
         }
-
-        private void DockingManager_ActiveContentChanged(object sender, EventArgs e)
+        
+        private void Editors_OnActiveContentChanged(object? sender, EventArgs e)
         {
-            //Console.WriteLine(e);
+            Console.WriteLine(sender);
         }
     }
 }
