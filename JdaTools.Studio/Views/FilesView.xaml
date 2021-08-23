@@ -38,6 +38,10 @@
                     <StackPanel Orientation="Horizontal">
                         <ContentControl Content="{Binding Converter={StaticResource FileToContentConverter}}" Margin="5 0" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding FileName}" Background="Transparent"/>
+                        <TextBlock Text="{Binding Description}" 
+                                   Background="Transparent" 
+                                   Foreground="{StaticResource MahApps.Brushes.IdealForegroundDisabled}"
+                                   Margin="5 0"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

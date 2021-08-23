@@ -3,9 +3,11 @@ using JdaTools.Studio.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace JdaTools.Studio.Services
 {
@@ -116,17 +118,24 @@ namespace JdaTools.Studio.Services
 
             foreach (var mocaFile in filesRaw)
             {
+                var componentLevelDeserializer = new XmlSerializer(typeof(ComponentLevel));
                 if (mocaFile.Type == "D")
                 {
                     //System files should associated definition file with file description in XML format
                     var definitionFile = filesRaw.FirstOrDefault(f => f.FileName.Equals(mocaFile.FileName + ".mlvl", StringComparison.InvariantCultureIgnoreCase));
-                    Task<string> definitionXml;
+                    ComponentLevel componentLevel = null;
                     if (definitionFile != null)
                     {
-                        definitionXml = GetFileContent(definitionFile);
+                        string definitionXml;
+                        definitionXml = await GetFileContent(definitionFile);
+                        using var stream = new StringReader(definitionXml);
+                        componentLevel = (ComponentLevel) componentLevelDeserializer.Deserialize(stream);
                     }
                     //TODO:Attach definition
-                    returnFiles.Add(new MocaDirectory(mocaFile, () => GetDirectory(mocaFile.PathName)));
+                    returnFiles.Add(new MocaDirectory(mocaFile, () => GetDirectory(mocaFile.PathName))
+                    {
+                        Description = componentLevel?.Description
+                    });
                 }
                 else
                 {

@@ -8,50 +8,18 @@
     public class ComponentLevel
     {
 
-        private uint _nameField;
-
-        private string _descriptionField;
-
-        private ushort _sortSequenceField;
-
         /// <remarks/>
-        public uint Name
-        {
-            get
-            {
-                return this._nameField;
-            }
-            set
-            {
-                this._nameField = value;
-            }
-        }
-
+        [System.Xml.Serialization.XmlElementAttribute("name")]
+        public string Name { get; set; }
         /// <remarks/>
-        public string Description
-        {
-            get
-            {
-                return this._descriptionField;
-            }
-            set
-            {
-                this._descriptionField = value;
-            }
-        }
-
+        [System.Xml.Serialization.XmlElementAttribute("description")]
+        public string Description { get; set; }
+        [System.Xml.Serialization.XmlElementAttribute("library")]
+        public string Library { get; set; }
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sort-sequence")]
-        public ushort SortSequence
-        {
-            get
-            {
-                return this._sortSequenceField;
-            }
-            set
-            {
-                this._sortSequenceField = value;
-            }
-        }
+        public int SortSequence { get; set; }
+        [System.Xml.Serialization.XmlElementAttribute("editable")]
+        public bool Editable { get; set; }
     }
 }

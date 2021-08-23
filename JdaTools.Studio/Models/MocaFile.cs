@@ -7,6 +7,7 @@ namespace JdaTools.Studio.Models
         string Type { get; set; }
         string PathName { get; set; }
         string FileName { get; set; }
+        public string Description { get; set; }
     }
 
     public class MocaFile : IMocaFile
@@ -17,6 +18,8 @@ namespace JdaTools.Studio.Models
         public string PathName { get; set; }
         [MocaColumn("filename")]
         public string FileName { get; set; }
+
+        public string Description { get; set; }
 
         public override string ToString()
         {
