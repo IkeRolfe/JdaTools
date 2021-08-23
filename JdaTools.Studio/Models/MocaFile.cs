@@ -2,7 +2,14 @@
 
 namespace JdaTools.Studio.Models
 {
-    public class MocaFile
+    public interface IMocaFile
+    {
+        string Type { get; set; }
+        string PathName { get; set; }
+        string FileName { get; set; }
+    }
+
+    public class MocaFile : IMocaFile
     {
         [MocaColumn("type")]
         public string Type { get; set; }
@@ -16,5 +23,4 @@ namespace JdaTools.Studio.Models
             return FileName;
         }
     }
-
 }

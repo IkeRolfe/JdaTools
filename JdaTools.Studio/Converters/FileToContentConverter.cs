@@ -10,8 +10,8 @@ namespace JdaTools.Studio.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var file = (MocaFile)value;
-            if (file.Type == "D")
+            var type = value?.GetType();
+            if (type == typeof(MocaDirectory))
             {
                 return new PackIconMaterial()
                 {

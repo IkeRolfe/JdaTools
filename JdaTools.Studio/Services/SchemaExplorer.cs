@@ -91,28 +91,63 @@ namespace JdaTools.Studio.Services
             Files = files.OrderBy(x=>x);
         }
 
-        public async Task<IEnumerable<MocaFile>> GetDirectory(string path = null)
+        public async Task<IEnumerable<IMocaFile>> GetDirectory(string path = null)
         {
+            List<IMocaFile> returnFiles = new List<IMocaFile>();
+            List<MocaFile> filesRaw;
+            
             if (string.IsNullOrEmpty(path))
             {
-                var files = await _mocaClient.ExecuteQuery<MocaFile>("find file where pathname = @@LESDIR || '/src/cmdsrc/*'");
-                return files;
+                filesRaw = (await _mocaClient.ExecuteQuery<MocaFile>("find file where pathname = @@LESDIR || '/src/cmdsrc/*'")).ToList();
             }
             else
             {
-                var files = new List<MocaFile>();
+                filesRaw = new List<MocaFile>();
                 var previousDir = new MocaFile()
                 {
                     FileName = "..",
                     PathName = path.Substring(0, path.LastIndexOf('\\')),
                     Type = "D"
                 };
-                files.Add(previousDir);
+                filesRaw.Add(previousDir);
                 var dirFiles = await _mocaClient.ExecuteQuery<MocaFile>("find file where pathname = @path || '/*'", new {path});
-                files.AddRange(dirFiles);
-                return files;
+                filesRaw.AddRange(dirFiles);
             }
+
+            foreach (var mocaFile in filesRaw)
+            {
+                if (mocaFile.Type == "D")
+                {
+                    //System files should associated definition file with file description in XML format
+                    var definitionFile = filesRaw.FirstOrDefault(f => f.FileName.Equals(mocaFile.FileName + ".mlvl", StringComparison.InvariantCultureIgnoreCase));
+                    Task<string> definitionXml;
+                    if (definitionFile != null)
+                    {
+                        definitionXml = GetFileContent(definitionFile);
+                    }
+                    //TODO:Attach definition
+                    returnFiles.Add(new MocaDirectory(mocaFile, () => GetDirectory(mocaFile.PathName)));
+                }
+                else
+                {
+                    //Skip directory definitions
+                    if (mocaFile.FileName.EndsWith(".mlvl", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        continue;
+                    }
+                    returnFiles.Add(mocaFile);
+                }
+            }
+
+            return returnFiles;
         }
 
+        public async Task<string> GetFileContent(MocaFile file)
+        {
+            var response = await _mocaClient.ExecuteQuery("download file where filename = @filePath", new { filePath = file.PathName });
+            var content = response.MocaResults.GetDataTable().Rows[0]["DATA"].ToString();
+            var text = Encoding.UTF8.GetString(Convert.FromBase64String(content));
+            return text;
+        }
     }
 }

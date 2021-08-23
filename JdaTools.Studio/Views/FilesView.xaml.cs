@@ -38,7 +38,7 @@ namespace JdaTools.Studio.Views
 
         private void FilesListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var file = ((ListViewItem)sender).Content as MocaFile;
+            var file = ((ListViewItem)sender).Content as IMocaFile;
             (DataContext as FilesViewModel).GetFileContents(file);
         }
     }

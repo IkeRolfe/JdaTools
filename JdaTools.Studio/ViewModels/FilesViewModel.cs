@@ -28,12 +28,12 @@ namespace JdaTools.Studio.ViewModels
 
         private bool isBusy;
         public bool IsBusy { get => isBusy; set => SetProperty(ref isBusy, value); }
-        private IEnumerable<MocaFile> _files;
-        public IEnumerable<MocaFile> Files => GetFilteredFiles();
+        private IEnumerable<IMocaFile> _files;
+        public IEnumerable<IMocaFile> Files => GetFilteredFiles();
 
-        private IEnumerable<MocaFile> GetFilteredFiles()
+        private IEnumerable<IMocaFile> GetFilteredFiles()
         {
-            IEnumerable<MocaFile> files;
+            IEnumerable<IMocaFile> files;
             if (string.IsNullOrEmpty(SearchString))
             {
                 files = _files;
@@ -46,7 +46,6 @@ namespace JdaTools.Studio.ViewModels
             {
                 files = _files?.Where(t => t.FileName.Contains(SearchString, StringComparison.InvariantCultureIgnoreCase)); //Apply filter from search
             }
-            //TODO add pagination listview with 10,000 items is slow
             return files?.OrderBy(f => f.Type).ThenBy(f => f.FileName);
         }
 
@@ -56,7 +55,8 @@ namespace JdaTools.Studio.ViewModels
         private async void RefreshFiles()
         {
             IsBusy = true;
-            _files = await _schemaExplorer.GetDirectory();
+            var files = await _schemaExplorer.GetDirectory();;
+            _files = files;
             NotifyOfPropertyChange(nameof(Files));
             IsBusy = false;
         }
@@ -74,36 +74,42 @@ namespace JdaTools.Studio.ViewModels
         }
 
         private ICommand _getFileContentsSelect;
-        public ICommand GetFileContentsCommand => _getFileContentsSelect ??= new RelayCommand<MocaFile>(c => GetFileContents(c));
+        public ICommand GetFileContentsCommand => _getFileContentsSelect ??= new RelayCommand<IMocaFile>(c => GetFileContents(c));
 
-        internal async void GetFileContents(MocaFile file)
+        internal void GetFileContents(IMocaFile file)
         {
-            switch (file.Type)
+            if (file == null)
             {
-                case "F":
-                    OpenFile(file.PathName);
-                    return;
-                case "D":
-                    OpenDirectory(file.PathName);
-                    return;
+                return;
+            }
+            var fileType = typeof(MocaFile);
+            var dirType = typeof(MocaDirectory);
+            if (file.GetType() == dirType)
+            {
+                OpenDirectory((MocaDirectory)file);
+            }
+            else
+            {
+                OpenFile((MocaFile)file);
             }
         }
 
-        internal async void OpenDirectory(string filePath)
+        internal async void OpenDirectory(MocaDirectory directory)
         {
-            _files = await _schemaExplorer.GetDirectory(filePath);
+            await directory.RefreshFiles();
+            _files = directory.Files;
             NotifyOfPropertyChange(nameof(Files));
         }
 
-        internal async void OpenFile(string filePath)
+        internal async void OpenFile(MocaFile file)
         {
             //TODO: Move to messaging service
             var shellView = App.Current.MainWindow;
             var vm = (ShellViewModel)shellView.DataContext;
-            var response = await _mocaClient.ExecuteQuery("download file where filename = @filePath",new {filePath});
+            var response = await _mocaClient.ExecuteQuery("download file where filename = @filePath",new {filePath = file.PathName});
             var content = response.MocaResults.GetDataTable().Rows[0]["DATA"].ToString();
             var text = Encoding.UTF8.GetString(Convert.FromBase64String(content));
-            vm.NewEditor(text, false, filePath);
+            vm.NewEditor(text, false, file.FileName);
         }
 
         private object selectedCommand;
