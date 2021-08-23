@@ -26,14 +26,14 @@ namespace JdaTools.Studio.ViewModels
         {
             _mocaClient = mocaClient;
             _xmlManager = new XMLManager();
+            _xmlManager = new XMLManager();
+            _xmlManager.ReadConfigurationFile("ConnectionConfigs.xml");
+            SelectedConnection = _xmlManager._configs.Connections.FirstOrDefault(c => c.Default);
         }
 
         public LoginViewModel()
         {
-            _mocaClient = Ioc.Default.GetService<MocaClient>();
-            _xmlManager = new XMLManager();
-            _xmlManager.ReadConfigurationFile("ConnectionConfigs.xml");
-            SelectedConnection = _xmlManager._configs.Connections.FirstOrDefault(c => c.Default);
+            
 
         }
 

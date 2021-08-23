@@ -25,10 +25,10 @@ namespace JdaTools.Studio.ViewModels
         private MocaClient _mocaClient;
         private SchemaExplorer _schemaExplorer;
 
-        public CommandsViewModel()
+        public CommandsViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer)
         {
-            _mocaClient = Ioc.Default.GetService<MocaClient>();
-            _schemaExplorer = Ioc.Default.GetService<SchemaExplorer>();
+            _mocaClient = mocaClient;
+            _schemaExplorer = schemaExplorer;
         }
 
 

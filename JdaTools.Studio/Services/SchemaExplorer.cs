@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace JdaTools.Studio.Services
 {
-    internal class SchemaExplorer
+    public class SchemaExplorer
     {
         private MocaClient _mocaClient;
         private IEnumerable<TableDefinition> _tables;

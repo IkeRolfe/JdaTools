@@ -1,14 +1,10 @@
 ﻿using JdaTools.Connection;
 using JdaTools.Studio.Services;
-using JdaTools.Studio.Views;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using JdaTools.Studio.Models;
 
@@ -19,10 +15,10 @@ namespace JdaTools.Studio.ViewModels
         private MocaClient _mocaClient;
         private SchemaExplorer _schemaExplorer;
 
-        public FilesViewModel()
+        public FilesViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer)
         {
-            _mocaClient = Ioc.Default.GetService<MocaClient>();
-            _schemaExplorer = Ioc.Default.GetService<SchemaExplorer>();
+            _mocaClient = mocaClient;
+            _schemaExplorer = schemaExplorer;
         }
 
 

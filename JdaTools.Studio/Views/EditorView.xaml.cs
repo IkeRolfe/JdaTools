@@ -1,7 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit.CodeCompletion;
 using JdaTools.Studio.Models;
 using JdaTools.Studio.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Caliburn.Micro;
 
 namespace JdaTools.Studio.Views
 {
@@ -51,7 +51,7 @@ namespace JdaTools.Studio.Views
             var textToCursor = fullText.ToLower().Substring(0,QueryTextBox.CaretOffset);
             var backBlocks = Regex.Split(fullText.ToLower().Substring(0, QueryTextBox.CaretOffset - 1), @"\s+");
             var forwardBlocks = Regex.Split(fullText.ToLower().Substring(QueryTextBox.CaretOffset), @"\s+");
-            var schema = Ioc.Default.GetService<SchemaExplorer>();
+            var schema = IoC.Get<SchemaExplorer>();
             var lastWord = backBlocks.Last();
 
             if (textToCursor.LastIndexOf(']') >= textToCursor.LastIndexOf('['))

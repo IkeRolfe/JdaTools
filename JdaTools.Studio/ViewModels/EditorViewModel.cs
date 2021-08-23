@@ -17,15 +17,15 @@ namespace JdaTools.Studio.ViewModels
     {
         private MocaClient _mocaClient;
 
-        public EditorViewModel()
+        public EditorViewModel(MocaClient mocaClient)
         {
-            _mocaClient = Ioc.Default.GetService<MocaClient>();
+            _mocaClient = mocaClient;
             SetInfoBar("Circle", "Gray", false, "");
         }
 
-        public EditorViewModel(string query)
+        public EditorViewModel(MocaClient mocaClient, string query)
         {
-            _mocaClient = Ioc.Default.GetService<MocaClient>();
+            _mocaClient = mocaClient;
             QueryDocument.Text = query;
             SetInfoBar("Circle", "Gray", false, "");
         }
@@ -51,6 +51,17 @@ namespace JdaTools.Studio.ViewModels
             get => _title;
             set => SetProperty(ref _title, value);
         }
+        private string _localPath;
+        public string LocalPath
+        {
+            get => _localPath;
+            set
+            {
+                _localPath = value;
+                NotifyOfPropertyChange(()=>LocalPath);
+            }
+        }
+
 
         #region InfoBarStuff
         private string _infoBarIcon;
@@ -114,6 +125,7 @@ namespace JdaTools.Studio.ViewModels
             }
             IsBusy = false;
         }
+
         private async Task<DataTable> ConvertNullValues(DataTable dataTable)
         {
             List<string> dcNames = dataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();

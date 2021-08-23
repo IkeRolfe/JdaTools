@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using JdaTools.Studio.Services;
 using Caliburn.Micro;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 
 namespace JdaTools.Studio.ViewModels
 {
@@ -21,17 +23,22 @@ namespace JdaTools.Studio.ViewModels
     {
         private MocaClient _mocaClient;
         private SchemaExplorer _schemaExplorer;
-        private LoginViewModel _loginViewModel = new LoginViewModel();
-        private TableExplorerViewModel _tableExplorerViewModel = new TableExplorerViewModel();
-        private CommandsViewModel _commandsViewModel = new();
-        private FilesViewModel _filesViewModel = new();
+        private LoginViewModel _loginViewModel;
+        private TableExplorerViewModel _tableExplorerViewModel;
+        private CommandsViewModel _commandsViewModel;
+        private FilesViewModel _filesViewModel;
 
 
-        public ShellViewModel()
+        public ShellViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer)
         {
-            _mocaClient = Ioc.Default.GetService<MocaClient>();
-            _schemaExplorer = Ioc.Default.GetService<SchemaExplorer>();
-            Editors.Add(new EditorViewModel());
+            _mocaClient = mocaClient;
+            _schemaExplorer = schemaExplorer;
+            Editors.Add(new EditorViewModel(_mocaClient));
+            //TODO move to event aggregator
+            _loginViewModel = new LoginViewModel(_mocaClient);
+            _tableExplorerViewModel = new TableExplorerViewModel(_mocaClient, _schemaExplorer);
+            _commandsViewModel = new CommandsViewModel(_mocaClient, _schemaExplorer);
+            _filesViewModel = new FilesViewModel(_mocaClient, _schemaExplorer);
             LoginViewModel.LoginCompleteAction = new System.Action(() => OnLoginComplete());
         }
         
@@ -74,14 +81,14 @@ namespace JdaTools.Studio.ViewModels
 
         internal void NewEditor()
         {
-            var vm = new EditorViewModel();
+            var vm = new EditorViewModel(_mocaClient);
             Editors.Add(vm);
             SelectedEditor = vm;
         }
 
         internal void NewEditor(string query, bool execute = false, string title = null)
         {
-            var vm = new EditorViewModel(query);
+            var vm = new EditorViewModel(_mocaClient, query);
             if (title != null)
             {
                 vm.Title = title;
@@ -143,7 +150,37 @@ namespace JdaTools.Studio.ViewModels
         private ICommand executeCommand;
         public ICommand ExecuteCommand => executeCommand ??= new RelayCommand(ExecuteCurrentTab);
 
-        
+        public void Save()
+        {
+            var path = SelectedEditor?.LocalPath;
+            if (string.IsNullOrEmpty(path))
+            {
+                SaveAs();
+                return;
+            }
+            var text = SelectedEditor?.QueryDocument.Text;
+            File.WriteAllText(path,text);
+        }
 
+        public void SaveAs()
+        {
+            var text = SelectedEditor?.QueryDocument.Text;
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllText(saveFileDialog.FileName, text);
+                var fullPath = saveFileDialog.FileName;
+                SelectedEditor.LocalPath = fullPath;
+                SelectedEditor.Title = fullPath.Substring(fullPath.LastIndexOf("\\", StringComparison.Ordinal)+1);
+            }
+                
+        }
+
+        public bool CanSaveAs() => true;
     }
 }
