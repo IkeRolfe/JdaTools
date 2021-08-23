@@ -174,8 +174,8 @@ namespace JdaTools.Studio.ViewModels
             {
                 return;
             }
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = SelectedEditor.Title;
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 File.WriteAllText(saveFileDialog.FileName, text);

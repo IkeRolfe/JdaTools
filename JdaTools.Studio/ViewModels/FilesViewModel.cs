@@ -3,9 +3,11 @@ using JdaTools.Studio.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using System.Xml.Serialization;
 using JdaTools.Studio.Models;
 
 namespace JdaTools.Studio.ViewModels
@@ -105,7 +107,17 @@ namespace JdaTools.Studio.ViewModels
             var response = await _mocaClient.ExecuteQuery("download file where filename = @filePath",new {filePath = file.PathName});
             var content = response.MocaResults.GetDataTable().Rows[0]["DATA"].ToString();
             var text = Encoding.UTF8.GetString(Convert.FromBase64String(content));
-            vm.NewEditor(text, false, file.FileName);
+            /*//Check if command file
+            MocaCommandFile commandDef = null;
+            if (file.FileName.EndsWith(".mcmd"))
+            {
+                using var stream = new StringReader(text);
+                var serializer = new XmlSerializer(typeof(MocaCommandFile));
+                commandDef = (MocaCommandFile)serializer.Deserialize(stream);
+            }
+
+            var commandText = commandDef?.LocalSyntax;
+            vm.NewEditor(text, false, file.FileName);*/
         }
 
         private object selectedCommand;

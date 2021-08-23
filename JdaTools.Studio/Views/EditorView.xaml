@@ -39,9 +39,12 @@
                   HorizontalAlignment="Stretch"/>
         <DataGrid x:Name="ResultsGrid" 
                   Grid.Row="3" 
+                  IsReadOnly="True"
                   ItemsSource="{Binding ResultData}"
                   AutoGeneratingColumn="ResultsGrid_AutoGeneratingColumn"
                   Style="{StaticResource MahApps.Styles.DataGrid}"
+                  EnableColumnVirtualization="True"
+                  EnableRowVirtualization="True"
                   Padding="0,0,0,2"
                   />
         <StackPanel Orientation="Vertical" Grid.Row="4">

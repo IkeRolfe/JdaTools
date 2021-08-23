@@ -27,6 +27,11 @@
 			<Begin>\[</Begin>
 			<End>\]</End>
 			<RuleSet>
+				<Span  color="Comment" begin="--" end="\n"/>
+				<Span color="Comment"  multiline="true">
+					<Begin>/\*</Begin>
+					<End>\*/</End>
+				</Span>
 				<Keywords fontWeight="bold" foreground="Blue" fontStyle="italic">
 					<Word>ABORT</Word>
 					<Word>BETWEEN</Word>
