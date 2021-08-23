@@ -16,6 +16,12 @@
         <KeyBinding Modifiers="Control"
                     Key="N"
                     Command="{Binding NewEditorCommand}" />
+        <KeyBinding Modifiers="Control"
+                    Key="S"
+                    Command="{Binding SaveCommand}"/>
+        <KeyBinding Modifiers="Control"
+                    Key="O"
+                    Command="{Binding OpenCommand}"/>
     </Window.InputBindings>
 
     <Grid>
@@ -32,7 +38,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <mah:MetroTabControl Grid.Column="0" TabStripPlacement="Bottom" Style="{StaticResource MahApps.Styles.TabControl    }">
+                <mah:MetroTabControl Grid.Column="0" TabStripPlacement="Bottom" Style="{StaticResource MahApps.Styles.TabControl}">
                     <TabControl.Resources>
                         <Style TargetType="{x:Type TabItem}">
                             <Setter Property="HeaderTemplate">
@@ -77,7 +83,7 @@
                         <Button x:Name="SaveAs">
                             <iconpacks:Material Kind="ContentSaveAll"/>
                         </Button>
-                        <Button IsEnabled = "false" Content="{iconpacks:Material Kind=FolderOpen}" Command="{Binding ExecuteCommand}"/>
+                        <Button x:Name="Open" Content="{iconpacks:Material Kind=FolderOpen}"/>
                         <Button IsEnabled = "false" Content="{iconpacks:FontAwesome Kind=RouteSolid}" Command="{Binding ExecuteCommand}"/>
                         <Button Content="{iconpacks:Material Kind=TabPlus}" Foreground="DarkKhaki" Command="{Binding NewEditorCommand}"/>
                         <Button Content="{iconpacks:Material Kind=UploadOutline}" Command="{Binding NewEditorCommand}"/>

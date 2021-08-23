@@ -150,6 +150,11 @@ namespace JdaTools.Studio.ViewModels
         private ICommand executeCommand;
         public ICommand ExecuteCommand => executeCommand ??= new RelayCommand(ExecuteCurrentTab);
 
+        private ICommand saveCommand;
+        public ICommand SaveCommand => saveCommand ??= new RelayCommand(Save);
+        private ICommand openCommand;
+        public ICommand OpenCommand => openCommand ??= new RelayCommand(Open);
+
         public void Save()
         {
             var path = SelectedEditor?.LocalPath;
@@ -179,6 +184,20 @@ namespace JdaTools.Studio.ViewModels
                 SelectedEditor.Title = fullPath.Substring(fullPath.LastIndexOf("\\", StringComparison.Ordinal)+1);
             }
                 
+        }
+
+        public void Open()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                var fullPath = openFileDialog.FileName;
+                var fileName = fullPath.Substring(fullPath.LastIndexOf("\\", StringComparison.Ordinal) + 1);
+                NewEditor();
+                SelectedEditor.Title = fileName;
+                SelectedEditor.LocalPath = fullPath;
+                SelectedEditor.QueryDocument.Text = File.OpenText(fullPath).ReadToEnd();
+            }
         }
 
         public bool CanSaveAs() => true;

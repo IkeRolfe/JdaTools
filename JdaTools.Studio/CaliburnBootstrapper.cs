@@ -29,6 +29,8 @@ namespace JdaTools.Studio
             _container.Singleton<SchemaExplorer>();
             _container.Singleton<MocaClient>();
             _container.PerRequest<ShellViewModel>();
+            //Hotkey parser
+
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)
