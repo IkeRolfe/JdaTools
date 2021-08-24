@@ -36,14 +36,15 @@ namespace JdaTools.Studio.Models
             _refreshFilesHandler = refreshFilesDelegate;
         }
 
-        public async Task RefreshFiles()
+        public async Task<List<IMocaFile>> RefreshFiles()
         {
             if (_refreshFilesHandler == null)
             {
-                return;
+                return null;
             }
             var files = await _refreshFilesHandler.Invoke();
             _files = files.ToList();
+            return _files;
         }
 
         public override string ToString()

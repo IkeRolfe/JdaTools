@@ -116,11 +116,8 @@ namespace JdaTools.Studio.ViewModels
                 commandDef = (MocaCommandFile)serializer.Deserialize(stream);
             }
 
-            var commandText = commandDef?.LocalSyntax;
-            vm.NewEditor(text, false, file.FileName);*/
+            var commandText = commandDef?.LocalSyntax;*/
+            vm.NewEditor(text, false, file.FileName);
         }
-
-        private object selectedCommand;
-        public object SelectedCommand { get => selectedCommand; set => SetProperty(ref selectedCommand, value); }
     }
 }

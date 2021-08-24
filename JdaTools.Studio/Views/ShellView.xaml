@@ -11,6 +11,7 @@
                   d:DataContext="{d:DesignInstance viewmodels:ShellViewModel, IsDesignTimeCreatable=True}"
                   xmlns:iconpacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                   xmlns:cm="http://caliburnmicro.com"
+                  xmlns:simpleChildWindow="http://metro.mahapps.com/winfx/xaml/simplechildwindow"
                   Title="JDA EXPLORER" Height="450" Width="800">
     <Window.InputBindings>
         <KeyBinding Modifiers="Control"
@@ -105,9 +106,13 @@
                 </Grid>
             </Grid>
         </Grid>
-        <Grid Background="AliceBlue" Visibility="{Binding LoginVisibility}">
+        <simpleChildWindow:ChildWindow Visibility="{Binding LoginVisibility}" 
+                                       Title="CONNECT"
+                                       ShowCloseButton="False" 
+                                       IsOpen="True">
             <views:LoginView DataContext="{Binding LoginViewModel}"
-                VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5"/>
-        </Grid>
+                             VerticalAlignment="Center" HorizontalAlignment="Center" Margin="25 15 25 25"/>
+        </simpleChildWindow:ChildWindow>
+        
     </Grid>
 </mah:MetroWindow>
