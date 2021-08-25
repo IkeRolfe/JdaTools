@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using Caliburn.Micro;
 using JdaTools.Studio.Models;
+using MahApps.Metro.SimpleChildWindow;
 
 namespace JdaTools.Studio.ViewModels
 {
@@ -145,12 +146,18 @@ namespace JdaTools.Studio.ViewModels
             vm.NewEditor(text, false, file.FileName);
         }
 
-        public void NewFile()
+        public async void NewFile()
         {
             var shellView = App.Current.MainWindow;
             var vm = (ShellViewModel)shellView.DataContext;
-
-            vm.NewEditor("", false, "NEW FILE");
+            var fileName = await Helpers.DialogueHelper.ShowInputDialogue("NEW FILE", "Enter new file name");
+            Files.Add(new MocaFile
+            {
+                FileName = fileName,
+                PathName = Path.Combine(CurrentPath, fileName),
+                Type = "F"
+            });
+            vm.NewEditor("", false, fileName);
         }
 
         public async Task HandleAsync(string message, CancellationToken cancellationToken)

@@ -18,10 +18,13 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
 using JdaTools.Studio.Models;
+using JdaTools.Studio.Views;
+using MahApps.Metro.SimpleChildWindow;
+using Screen = Caliburn.Micro.Screen;
 
 namespace JdaTools.Studio.ViewModels
 {
-    public class ShellViewModel : ViewModelBase, IHandle<string>
+    public class ShellViewModel : Screen, IHandle<string>
     {
         private readonly MocaClient _mocaClient;
         private readonly SchemaExplorer _schemaExplorer;
@@ -40,9 +43,19 @@ namespace JdaTools.Studio.ViewModels
             Tools.Add(new FilesViewModel(_mocaClient, _schemaExplorer, _eventAggregator));
             Tools.Add(new CommandsViewModel(_mocaClient, _schemaExplorer, _eventAggregator));
             Login = new LoginViewModel(_mocaClient, _eventAggregator);
+            
         }
-        
-        
+
+        private async void ShowLogin()
+        {
+            var viewModel = new LoginViewModel(_mocaClient, _eventAggregator);
+            var view = ViewLocator.LocateForModel(viewModel, null, null);
+            ViewModelBinder.Bind(viewModel, view, null);
+            var mainWindow = Helpers.DialogueHelper.MainWindow;
+            await mainWindow.ShowChildWindowAsync((ChildWindow)view);
+        }
+
+
         public LoginViewModel Login
         {
             get => _loginViewModel;
@@ -60,7 +73,11 @@ namespace JdaTools.Studio.ViewModels
         public ObservableCollection<EditorViewModel> Editors
         {
             get => _editors;
-            set => SetProperty(ref _editors, value);
+            set
+            {
+                _editors = value;
+                NotifyOfPropertyChange(() => _editors);
+            }
         }
 
         private ICommand newEditorCommand;
@@ -114,7 +131,8 @@ namespace JdaTools.Studio.ViewModels
                 {
                     IsEnabled = true;
                 }
-                SetProperty(ref loginVisibility, value);
+                loginVisibility = value;
+                NotifyOfPropertyChange(() => loginVisibility);
             }
         }
 
@@ -132,7 +150,14 @@ namespace JdaTools.Studio.ViewModels
         private bool isEnabled;
         
 
-        public bool IsEnabled { get => isEnabled; set => SetProperty(ref isEnabled, value); }
+        public bool IsEnabled { 
+            get => isEnabled; 
+            set
+            {
+                isEnabled = value;
+                NotifyOfPropertyChange(() => isEnabled);
+            }
+        }
 
         private ICommand executeCommand;
         public ICommand ExecuteCommand => executeCommand ??= new RelayCommand(ExecuteCurrentTab);
