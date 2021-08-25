@@ -23,9 +23,8 @@ namespace JdaTools.Studio
         protected override void Configure()
         {
             _container = new SimpleContainer();
-
-            _container.Singleton<IWindowManager, WindowManager>();
             _container.Singleton<IEventAggregator, EventAggregator>();
+            _container.Singleton<IWindowManager, WindowManager>();
             _container.Singleton<SchemaExplorer>();
             _container.Singleton<MocaClient>();
             _container.PerRequest<ShellViewModel>();

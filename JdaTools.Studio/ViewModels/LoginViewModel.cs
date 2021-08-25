@@ -1,14 +1,16 @@
 ﻿using JdaTools.Connection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Caliburn.Micro;
 using Microsoft.Toolkit.Mvvm.Input;
 using JdaTools.ConfigurationManager;
+using JdaTools.Studio.Models;
+using Action = System.Action;
 
 namespace JdaTools.Studio.ViewModels
 {
@@ -21,9 +23,11 @@ namespace JdaTools.Studio.ViewModels
         private string _endPoint;
         private XMLManager _xmlManager;
         private ConnectionInfo _selectedConnection;
+        private readonly IEventAggregator _eventAggregator;
 
-        public LoginViewModel(MocaClient mocaClient)
+        public LoginViewModel(MocaClient mocaClient, IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             _mocaClient = mocaClient;
             _xmlManager = new XMLManager();
             _xmlManager = new XMLManager();
@@ -31,11 +35,6 @@ namespace JdaTools.Studio.ViewModels
             SelectedConnection = _xmlManager._configs.Connections.FirstOrDefault(c => c.Default);
         }
 
-        public LoginViewModel()
-        {
-            
-
-        }
 
         public List<ConnectionInfo> Connections => _xmlManager._configs.Connections;
         public ConnectionInfo SelectedConnection
@@ -103,6 +102,8 @@ namespace JdaTools.Studio.ViewModels
                 //TODO show login fail
                 return;
             }
+
+            await _eventAggregator.PublishOnUIThreadAsync(EventMessages.LoginEvent);
             LoginCompleteAction?.Invoke();
                     
         }
@@ -117,6 +118,7 @@ namespace JdaTools.Studio.ViewModels
         }
 
         private ICommand loginCommand;
+        
         public ICommand LoginCommand => loginCommand ??= new AsyncRelayCommand(Login);
         
     }

@@ -14,16 +14,20 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Row="0" MinWidth="100"
+            <!--<TextBox Grid.Row="0" MinWidth="100"
                  KeyUp="TextBox_KeyEnterUpdate"
                      mah:TextBoxHelper.Watermark="search files"
-                 Text="{Binding SearchString}"/>
+                 Text="{Binding SearchString}"/>-->
+            <TextBlock Grid.Row="0" MinWidth="100" x:Name="CurrentPath"
+                       Text="{Binding CurrentPath, Mode=TwoWay}" 
+                       Margin="5 0" VerticalAlignment="Bottom"/>
             <Button Grid.Column="1"                    
                 Content="{iconpacks:Material Kind=Replay}" HorizontalAlignment="Right" Command="{Binding RefreshCommand}"/>
         </Grid>
@@ -46,5 +50,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <Button Grid.Row="2" x:Name="NewFile">NEW FILE</Button>
     </Grid>
 </UserControl>

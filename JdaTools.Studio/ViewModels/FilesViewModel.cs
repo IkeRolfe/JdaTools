@@ -3,48 +3,60 @@ using JdaTools.Studio.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
+using Caliburn.Micro;
 using JdaTools.Studio.Models;
 
 namespace JdaTools.Studio.ViewModels
 {
-    public class FilesViewModel : ViewModelBase
+    public class FilesViewModel : Screen, IHandle<string>
     {
-        private MocaClient _mocaClient;
-        private SchemaExplorer _schemaExplorer;
-
-        public FilesViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer)
+        private readonly MocaClient _mocaClient;
+        private readonly SchemaExplorer _schemaExplorer;
+        
+        public FilesViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer, IEventAggregator eventAggregator)
         {
             _mocaClient = mocaClient;
             _schemaExplorer = schemaExplorer;
+            _eventAggregator = eventAggregator;
+            _eventAggregator.SubscribeOnPublishedThread(this);
+            
+        }
+        public override string DisplayName { get; set; } = "MOCA FILES";
+
+        public override string ToString()
+        {
+            return DisplayName;
         }
 
-
-        private bool isBusy;
-        public bool IsBusy { get => isBusy; set => SetProperty(ref isBusy, value); }
-        private IEnumerable<IMocaFile> _files;
-        public IEnumerable<IMocaFile> Files => GetFilteredFiles();
-
-        private IEnumerable<IMocaFile> GetFilteredFiles()
+        private bool _isBusy;
+        public bool IsBusy
         {
-            IEnumerable<IMocaFile> files;
-            if (string.IsNullOrEmpty(SearchString))
+            get => _isBusy;
+            set
             {
-                files = _files;
+                _isBusy = value;
+                NotifyOfPropertyChange(()=>IsBusy);
             }
-            else if (SearchString?.FirstOrDefault() == '^')
+        }
+
+        private ObservableCollection<IMocaFile> _files;
+
+        public ObservableCollection<IMocaFile> Files
+        {
+            get => _files;
+            set
             {
-                files = _files?.Where(t => t.FileName.StartsWith(SearchString, StringComparison.InvariantCultureIgnoreCase));
+                _files = value;
+                NotifyOfPropertyChange(() => Files);
             }
-            else
-            {
-                files = _files?.Where(t => t.FileName.Contains(SearchString, StringComparison.InvariantCultureIgnoreCase)); //Apply filter from search
-            }
-            return files?.OrderBy(f => f.Type).ThenBy(f => f.FileName);
         }
 
         private ICommand _refreshCommand;
@@ -54,24 +66,36 @@ namespace JdaTools.Studio.ViewModels
         {
             IsBusy = true;
             var files = await _schemaExplorer.GetDirectory();;
-            _files = files;
+            _files = new ObservableCollection<IMocaFile>(files);
             NotifyOfPropertyChange(nameof(Files));
+            //use any file to get path
+            var filePathTemplate = Files.FirstOrDefault()?.PathName;
+            if (!string.IsNullOrEmpty(filePathTemplate))
+            {
+                var pathLength = filePathTemplate.LastIndexOf('\\');
+                if (pathLength > 1)
+                {
+                    CurrentPath = filePathTemplate?.Substring(0, pathLength);
+                }
+            }
             IsBusy = false;
         }
 
-        private string _searchString;
+        private string _currentPath;
 
-        public string SearchString
+        public string CurrentPath
         {
-            get => _searchString;
+            get => _currentPath;
             set
             {
-                SetProperty(ref _searchString, value);
-                NotifyOfPropertyChange(nameof(Files));
+                _currentPath = value; 
+                NotifyOfPropertyChange(()=>CurrentPath);
             }
         }
 
+
         private ICommand _getFileContentsSelect;
+        private readonly IEventAggregator _eventAggregator;
         public ICommand GetFileContentsCommand => _getFileContentsSelect ??= new RelayCommand<IMocaFile>(c => GetFileContents(c));
 
         internal void GetFileContents(IMocaFile file)
@@ -95,8 +119,9 @@ namespace JdaTools.Studio.ViewModels
         internal async void OpenDirectory(MocaDirectory directory)
         {
             await directory.RefreshFiles();
-            _files = directory.Files;
+            Files = new ObservableCollection<IMocaFile>(directory.Files);
             NotifyOfPropertyChange(nameof(Files));
+            CurrentPath = directory.PathName;
         }
 
         internal async void OpenFile(MocaFile file)
@@ -118,6 +143,24 @@ namespace JdaTools.Studio.ViewModels
 
             var commandText = commandDef?.LocalSyntax;*/
             vm.NewEditor(text, false, file.FileName);
+        }
+
+        public void NewFile()
+        {
+            var shellView = App.Current.MainWindow;
+            var vm = (ShellViewModel)shellView.DataContext;
+
+            vm.NewEditor("", false, "NEW FILE");
+        }
+
+        public async Task HandleAsync(string message, CancellationToken cancellationToken)
+        {
+            switch (message)
+            {
+                case EventMessages.LoginEvent:
+                    RefreshFiles();
+                    break;
+            }
         }
     }
 }

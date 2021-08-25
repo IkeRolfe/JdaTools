@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 
 namespace JdaTools.Studio.ViewModels
 {
@@ -20,18 +22,21 @@ namespace JdaTools.Studio.ViewModels
     using JdaTools.Studio.Services;
     using JdaTools.Studio.Models;
     using JdaTools.Studio.Views;
-    public class CommandsViewModel : ViewModelBase
+    public class CommandsViewModel : Screen, IHandle<string>
     {
         private MocaClient _mocaClient;
         private SchemaExplorer _schemaExplorer;
+        private IEventAggregator _eventAggregator;
 
-        public CommandsViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer)
+        public CommandsViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer, IEventAggregator eventAggregator)
         {
             _mocaClient = mocaClient;
             _schemaExplorer = schemaExplorer;
+            _eventAggregator = eventAggregator;
+            _eventAggregator.SubscribeOnPublishedThread(this);
         }
 
-
+        public override string DisplayName { get; set; } = "MOCA COMMANDS";
 
         public IEnumerable<CommandDefinition> Commands => GetFilteredCommands();
 
@@ -72,7 +77,8 @@ namespace JdaTools.Studio.ViewModels
             get => _searchString;
             set
             {
-                SetProperty(ref _searchString, value);
+                _searchString = value;
+                NotifyOfPropertyChange(()=>SearchString);
                 NotifyOfPropertyChange(nameof(Commands));
             }
         }
@@ -89,10 +95,35 @@ namespace JdaTools.Studio.ViewModels
         }
 
         private object selectedCommand;
-        public object SelectedCommand { get => selectedCommand; set => SetProperty(ref selectedCommand, value); }
+        public object SelectedCommand
+        {
+            get => selectedCommand;
+            set {
+                selectedCommand = value;
+                NotifyOfPropertyChange(() => SelectedCommand);
+            }
+        }
 
         private bool isBusy;
 
-        public bool IsBusy { get => isBusy; set => SetProperty(ref isBusy, value); }
+        public bool IsBusy
+        {
+            get => isBusy;
+            set
+            {
+                isBusy = value;
+                NotifyOfPropertyChange(() => IsBusy);
+            }
+        }
+
+        public async Task HandleAsync(string message, CancellationToken cancellationToken)
+        {
+            switch (message)
+            {
+                case EventMessages.LoginEvent:
+                    Refresh();
+                    break;
+            }
+        }
     }
 }

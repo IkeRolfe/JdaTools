@@ -15,11 +15,13 @@ using JdaTools.Studio.Services;
 using Caliburn.Micro;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Forms;
+using JdaTools.Studio.Models;
 
 namespace JdaTools.Studio.ViewModels
 {
-    public class ShellViewModel : ViewModelBase
+    public class ShellViewModel : ViewModelBase, IHandle<string>
     {
         private MocaClient _mocaClient;
         private SchemaExplorer _schemaExplorer;
@@ -29,17 +31,18 @@ namespace JdaTools.Studio.ViewModels
         private FilesViewModel _filesViewModel;
 
 
-        public ShellViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer)
+        public ShellViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer, IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
             _mocaClient = mocaClient;
             _schemaExplorer = schemaExplorer;
             Editors.Add(new EditorViewModel(_mocaClient));
             //TODO move to event aggregator
-            _loginViewModel = new LoginViewModel(_mocaClient);
             _tableExplorerViewModel = new TableExplorerViewModel(_mocaClient, _schemaExplorer);
-            _commandsViewModel = new CommandsViewModel(_mocaClient, _schemaExplorer);
-            _filesViewModel = new FilesViewModel(_mocaClient, _schemaExplorer);
-            LoginViewModel.LoginCompleteAction = new System.Action(() => OnLoginComplete());
+            Tools.Add(new FilesViewModel(_mocaClient, _schemaExplorer, _eventAggregator));
+            Tools.Add(new CommandsViewModel(_mocaClient, _schemaExplorer, _eventAggregator));
+            Login = new LoginViewModel(_mocaClient, _eventAggregator);
         }
         
         private void OnLoginComplete()
@@ -52,6 +55,18 @@ namespace JdaTools.Studio.ViewModels
             
         }
 
+        public LoginViewModel Login
+        {
+            get => _loginViewModel;
+            set
+            {
+                _loginViewModel = value;
+                NotifyOfPropertyChange(()=>Login);
+            }
+        }
+
+        public ObservableCollection<object> Tools { get; set; } = new ObservableCollection<object>();
+
         private ObservableCollection<EditorViewModel> _editors = new ObservableCollection<EditorViewModel>();
 
         public ObservableCollection<EditorViewModel> Editors
@@ -59,10 +74,7 @@ namespace JdaTools.Studio.ViewModels
             get => _editors;
             set => SetProperty(ref _editors, value);
         }
-        public LoginViewModel LoginViewModel
-        {
-            get => _loginViewModel;
-        }
+        
         public TableExplorerViewModel TableExplorer
         {
             get => _tableExplorerViewModel;
@@ -153,6 +165,7 @@ namespace JdaTools.Studio.ViewModels
         private ICommand saveCommand;
         public ICommand SaveCommand => saveCommand ??= new RelayCommand(Save);
         private ICommand openCommand;
+        private readonly IEventAggregator _eventAggregator;
         public ICommand OpenCommand => openCommand ??= new RelayCommand(Open);
 
         public void Save()
@@ -201,5 +214,14 @@ namespace JdaTools.Studio.ViewModels
         }
 
         public bool CanSaveAs() => true;
+        public async Task HandleAsync(string message, CancellationToken cancellationToken)
+        {
+            switch (message)
+            {
+                case EventMessages.LoginEvent:
+                    LoginVisibility = Visibility.Collapsed;
+                    break;
+            }
+        }
     }
 }
