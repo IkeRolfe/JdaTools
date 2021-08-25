@@ -19,9 +19,9 @@ namespace JdaTools.Studio.Views
     /// <summary>
     /// Interaction logic for TableExplorerView.xaml
     /// </summary>
-    public partial class TableExplorerView : UserControl
+    public partial class TablesView : UserControl
     {
-        public TableExplorerView()
+        public TablesView()
         {
             InitializeComponent();
         }
@@ -37,7 +37,7 @@ namespace JdaTools.Studio.Views
         private void GenerateSelect_Clicked(object sender, RoutedEventArgs e)
         {
             var table = (sender as MenuItem).Tag.ToString();
-            (DataContext as TableExplorerViewModel).PerformGenerateSelect(table);
+            (DataContext as TablesViewModel).PerformGenerateSelect(table);
         }
     }
 }

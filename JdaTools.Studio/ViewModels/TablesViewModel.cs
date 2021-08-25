@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -16,18 +17,20 @@ using Caliburn.Micro;
 
 namespace JdaTools.Studio.ViewModels
 {
-    public class TableExplorerViewModel : ViewModelBase
+    public class TablesViewModel : Screen, IHandle<string>
     {
         private MocaClient _mocaClient;
         private SchemaExplorer _schemaExplorer;
+        private IEventAggregator _eventAggregator;
 
-        public TableExplorerViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer)
+        public TablesViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer, IEventAggregator eventAggregator)
         {
             _mocaClient = mocaClient;
             _schemaExplorer = schemaExplorer;
+            _eventAggregator = eventAggregator;
+            _eventAggregator.SubscribeOnPublishedThread(this);
         }
-
-
+        public override string DisplayName { get; set; } = "TABLES";
 
         public IEnumerable<TableDefinition> Tables => GetFilteredTables();
 
@@ -79,8 +82,17 @@ namespace JdaTools.Studio.ViewModels
             vm.NewEditor($"[select top 100 * from {tableName}]", true);
         }
 
-        private object selectedTable;
-        public object SelectedTable { get => selectedTable; set => SetProperty(ref selectedTable, value); }
+        private TableDefinition _selectedTable;
+        public TableDefinition SelectedTable
+        {
+            get => _selectedTable;
+            set 
+            {
+
+                _selectedTable = value;
+                NotifyOfPropertyChange(() => SelectedTable);
+            }
+        }
 
         private bool isBusy;
 
@@ -91,6 +103,16 @@ namespace JdaTools.Studio.ViewModels
             {
                 isBusy = value;
                 NotifyOfPropertyChange(() => IsBusy);
+            }
+        }
+
+        public async Task HandleAsync(string message, CancellationToken cancellationToken)
+        {
+            switch (message)
+            {
+                case EventMessages.LoginEvent:
+                    Refresh();
+                    break;
             }
         }
     }

@@ -23,38 +23,26 @@ namespace JdaTools.Studio.ViewModels
 {
     public class ShellViewModel : ViewModelBase, IHandle<string>
     {
-        private MocaClient _mocaClient;
-        private SchemaExplorer _schemaExplorer;
+        private readonly MocaClient _mocaClient;
+        private readonly SchemaExplorer _schemaExplorer;
         private LoginViewModel _loginViewModel;
-        private TableExplorerViewModel _tableExplorerViewModel;
-        private CommandsViewModel _commandsViewModel;
-        private FilesViewModel _filesViewModel;
-
+        
 
         public ShellViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer, IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
-            _eventAggregator.Subscribe(this);
+            _eventAggregator.SubscribeOnPublishedThread(this);
             _mocaClient = mocaClient;
             _schemaExplorer = schemaExplorer;
             Editors.Add(new EditorViewModel(_mocaClient));
             //TODO move to event aggregator
-            _tableExplorerViewModel = new TableExplorerViewModel(_mocaClient, _schemaExplorer);
+            Tools.Add(new TablesViewModel(_mocaClient, _schemaExplorer, _eventAggregator));
             Tools.Add(new FilesViewModel(_mocaClient, _schemaExplorer, _eventAggregator));
             Tools.Add(new CommandsViewModel(_mocaClient, _schemaExplorer, _eventAggregator));
             Login = new LoginViewModel(_mocaClient, _eventAggregator);
         }
         
-        private void OnLoginComplete()
-        {
-            LoginVisibility = Visibility.Collapsed;
-            //Refresh jda schema TODO: move to messaging center
-            TableExplorer.RefreshCommand.Execute(null);
-            CommandsViewModel.RefreshCommand.Execute(null);
-            FilesViewModel.RefreshCommand.Execute(null);
-            
-        }
-
+        
         public LoginViewModel Login
         {
             get => _loginViewModel;
@@ -73,19 +61,6 @@ namespace JdaTools.Studio.ViewModels
         {
             get => _editors;
             set => SetProperty(ref _editors, value);
-        }
-        
-        public TableExplorerViewModel TableExplorer
-        {
-            get => _tableExplorerViewModel;
-        }
-        public CommandsViewModel CommandsViewModel
-        {
-            get => _commandsViewModel;
-        }
-        public FilesViewModel FilesViewModel
-        {
-            get => _filesViewModel;
         }
 
         private ICommand newEditorCommand;

@@ -98,6 +98,7 @@
         <simpleChildWindow:ChildWindow Visibility="{Binding LoginVisibility}" 
                                        Title="CONNECT"
                                        ShowCloseButton="False" 
+                                       CloseByEscape="False"
                                        IsOpen="True">
             <ContentControl x:Name="Login"></ContentControl>
         </simpleChildWindow:ChildWindow>
