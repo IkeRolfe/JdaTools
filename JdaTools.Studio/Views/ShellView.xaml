@@ -7,12 +7,13 @@
                   xmlns:local="clr-namespace:JdaTools.Studio" 
                   xmlns:views="clr-namespace:JdaTools.Studio.Views" 
                   xmlns:viewmodels="clr-namespace:JdaTools.Studio.ViewModels"
+                  SaveWindowPosition="True"
                   mc:Ignorable="d"
                   d:DataContext="{d:DesignInstance viewmodels:ShellViewModel, IsDesignTimeCreatable=True}"
                   xmlns:iconpacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                   xmlns:cm="http://caliburnmicro.com"
                   xmlns:simpleChildWindow="http://metro.mahapps.com/winfx/xaml/simplechildwindow"
-                  Title="JDA EXPLORER" Height="450" Width="800">
+                  Title="JDA EXPLORER" Height="900" Width="1600">
     <Window.InputBindings>
         <KeyBinding Modifiers="Control"
                     Key="N"
@@ -24,37 +25,18 @@
                     Key="O"
                     Command="{Binding OpenCommand}"/>
     </Window.InputBindings>
-
     <Grid>
         <Grid IsEnabled="{Binding IsEnabled}">
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <DockingManager Grid.Column="0" x:Name="Tools" DocumentsSource="{Binding Tools}">
-                    <DockingManager.DocumentHeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Content.DisplayName}"/>
-                        </DataTemplate>
-                    </DockingManager.DocumentHeaderTemplate>
-                    <DockingManager.LayoutItemTemplate>
-                        <DataTemplate>
-                            <ContentControl cm:View.Model="{Binding Content}" IsTabStop="False"/>
-                        </DataTemplate>
-                    </DockingManager.LayoutItemTemplate>
-                </DockingManager>
-                <GridSplitter Grid.Column="1" Margin="2,0,2,0"
-                  Width="3" 
-                  VerticalAlignment="Stretch" 
-                  HorizontalAlignment="Center"/>
                 <Grid Grid.Column="2" Margin="0 2 0 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -80,7 +62,14 @@
                     </StackPanel>
                     <DockingManager Grid.Row="1" x:Name="Editors" DocumentsSource="{Binding Editors}" 
                                     ActiveContent="{Binding SelectedEditor, Mode=TwoWay}" 
-                                    ActiveContentChanged="Editors_OnActiveContentChanged">
+                                    ActiveContentChanged="Editors_OnActiveContentChanged"
+                                    AnchorablesSource="{Binding Tools}"
+                                    >
+                        <DockingManager.AnchorableHeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Content.DisplayName}"/>
+                            </DataTemplate>
+                        </DockingManager.AnchorableHeaderTemplate>
                         <DockingManager.DocumentHeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Content.Title}"/>
@@ -99,8 +88,8 @@
                                        Title="CONNECT"
                                        ShowCloseButton="False" 
                                        CloseByEscape="False"
-                                       IsOpen="True">
-            <ContentControl x:Name="Login"></ContentControl>
+                                       IsOpen="True" Margin="-10,3,10,-3">
+            <ContentControl x:Name="Login" Margin="15 5 15 15"></ContentControl>
         </simpleChildWindow:ChildWindow>
         
     </Grid>

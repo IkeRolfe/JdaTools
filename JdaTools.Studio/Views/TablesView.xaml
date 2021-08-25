@@ -27,7 +27,9 @@
             <Button Grid.Column="1"                    
                 Content="{iconpacks:Material Kind=Replay}" HorizontalAlignment="Right" Command="{Binding RefreshCommand}"/>
         </Grid>
-        <TreeView Grid.Row="1" x:Name="TableListView" ItemsSource="{Binding Tables}">
+        <TreeView Grid.Row="1" x:Name="TableListView" ItemsSource="{Binding Tables}"
+                  VirtualizingStackPanel.IsVirtualizing="True"
+                  VirtualizingStackPanel.VirtualizationMode="Recycling">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate  ItemsSource="{Binding Columns}">
                     <TextBlock Text="{Binding}">

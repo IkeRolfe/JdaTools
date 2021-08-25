@@ -17,6 +17,22 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
             <converters:FileToContentConverter x:Key="FileToContentConverter"/>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
+                <Setter Property="Margin" Value="2"></Setter>
+            </Style>
+            <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                <Setter Property="Margin" Value="2"></Setter>
+            </Style>
+            <Style TargetType="PasswordBox" BasedOn="{StaticResource MahApps.Styles.PasswordBox}">
+                <Setter Property="Margin" Value="2"></Setter>
+            </Style>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+                <Setter Property="Margin" Value="2"></Setter>
+            </Style>
+            <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button}">
+                <Setter Property="Margin" Value="2"></Setter>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

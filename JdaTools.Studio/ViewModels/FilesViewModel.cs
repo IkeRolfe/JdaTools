@@ -27,9 +27,9 @@ namespace JdaTools.Studio.ViewModels
             _schemaExplorer = schemaExplorer;
             _eventAggregator = eventAggregator;
             _eventAggregator.SubscribeOnPublishedThread(this);
-            
         }
-        public override string DisplayName { get; set; } = "MOCA FILES";
+
+        public override string DisplayName { get; set; } = "FILES";
 
         public override string ToString()
         {

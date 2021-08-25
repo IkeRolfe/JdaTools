@@ -28,7 +28,7 @@
                 Content="{iconpacks:Material Kind=Replay}" HorizontalAlignment="Right" Command="{Binding RefreshCommand}"/>
         </Grid>
         <ListView Grid.Row="1" x:Name="CommandsListView" ItemsSource="{Binding Commands}"
-                  >
+                  VirtualizingStackPanel.IsVirtualizing="True">
             
         </ListView>
     </Grid>

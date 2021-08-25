@@ -36,7 +36,7 @@ namespace JdaTools.Studio.ViewModels
             _eventAggregator.SubscribeOnPublishedThread(this);
         }
 
-        public override string DisplayName { get; set; } = "MOCA COMMANDS";
+        public override string DisplayName { get; set; } = "COMMANDS";
 
         public IEnumerable<CommandDefinition> Commands => GetFilteredCommands();
 
@@ -56,7 +56,7 @@ namespace JdaTools.Studio.ViewModels
                 commands = _schemaExplorer.Commands?.Where(t => t.CommandName.Contains(SearchString, StringComparison.InvariantCultureIgnoreCase)); //Apply filter from search
             }
             //TODO add pagination listview with 10,000 items is slow
-            return commands?.Take(100);
+            return commands?.Take(200);
         }
 
         private ICommand refreshCommand;

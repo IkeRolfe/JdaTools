@@ -37,12 +37,12 @@ namespace JdaTools.Studio.ViewModels
             set => SetProperty(ref _isBusy, value);
         }
 
-        private DataTable resultData;
+        private DataTable _resultData;
 
         public DataTable ResultData
         {
-            get => resultData;
-            set => SetProperty(ref resultData, value);
+            get => _resultData;
+            set => SetProperty(ref _resultData, value);
         }
         private string _title = "NEW EDITOR";
 
