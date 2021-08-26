@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using Caliburn.Micro;
+using JdaTools.Studio.EventAggregatorMessages;
+using JdaTools.Studio.Helpers;
 using JdaTools.Studio.Models;
 using MahApps.Metro.SimpleChildWindow;
 

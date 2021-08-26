@@ -9,12 +9,14 @@ using System.Windows.Input;
 using Caliburn.Micro;
 using Microsoft.Toolkit.Mvvm.Input;
 using JdaTools.ConfigurationManager;
+using JdaTools.Studio.EventAggregatorMessages;
+using JdaTools.Studio.Helpers;
 using JdaTools.Studio.Models;
 using Action = System.Action;
 
 namespace JdaTools.Studio.ViewModels
 {
-    public class LoginViewModel : ViewModelBase
+    public class LoginViewModel : Screen
     {
         private MocaClient _mocaClient;
         private string _userName;
@@ -47,7 +49,8 @@ namespace JdaTools.Studio.ViewModels
             {
                 EndpointName = value.Name;
                 Endpoint = value.Url;
-                SetProperty(ref _selectedConnection, value);
+                _selectedConnection = value;
+                NotifyOfPropertyChange(()=>SelectedConnection);
             }
         }
         public string EndpointName
@@ -55,7 +58,8 @@ namespace JdaTools.Studio.ViewModels
             get => _endPointName;
             set
             {
-                SetProperty(ref _endPointName, value);
+                _endPointName = value;
+                NotifyOfPropertyChange(() => EndpointName);
             }
         }
         public string Endpoint
@@ -63,25 +67,39 @@ namespace JdaTools.Studio.ViewModels
             get => _endPoint;
             set
             {
-                SetProperty(ref _endPoint, value);                
+                _endPoint = value;
+                NotifyOfPropertyChange(() => Endpoint);
             }
         }
-        public string UserName 
-        { 
+        public string UserName
+        {
             get => _userName;
-            set => SetProperty(ref _userName, value);
+            set
+            {
+                _userName = value;
+                NotifyOfPropertyChange(() => UserName);
+            }
         }
+
         public string Password
         {
             get => _password;
-            set => SetProperty(ref _password, value);
+            set
+            {
+                _password = value;
+                NotifyOfPropertyChange(() => Password);
+            }
         }
         private bool _isBusy;
 
         public bool IsBusy
         {
             get => _isBusy;
-            set => SetProperty(ref _isBusy, value);
+            set
+            {
+                _isBusy = value;
+                NotifyOfPropertyChange(() => IsBusy);
+            }
         }
 
         public Action LoginCompleteAction
@@ -105,7 +123,7 @@ namespace JdaTools.Studio.ViewModels
 
             await _eventAggregator.PublishOnUIThreadAsync(EventMessages.LoginEvent);
             LoginCompleteAction?.Invoke();
-                    
+            await TryCloseAsync(true);
         }
 
         public async Task SaveConnection()

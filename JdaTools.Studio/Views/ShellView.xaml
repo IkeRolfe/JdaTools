@@ -58,7 +58,7 @@
                         <Button x:Name="Open" Content="{iconpacks:Material Kind=FolderOpen}"/>
                         <Button IsEnabled = "false" Content="{iconpacks:FontAwesome Kind=RouteSolid}" Command="{Binding ExecuteCommand}"/>
                         <Button Content="{iconpacks:Material Kind=TabPlus}" Foreground="DarkKhaki" Command="{Binding NewEditorCommand}"/>
-                        <Button Content="{iconpacks:Material Kind=UploadOutline}" Command="{Binding NewEditorCommand}"/>
+                        <Button x:Name="Upload" Content="{iconpacks:Material Kind=UploadOutline}"/>
                     </StackPanel>
                     <DockingManager Grid.Row="1" x:Name="Editors" DocumentsSource="{Binding Editors}" 
                                     ActiveContent="{Binding SelectedEditor, Mode=TwoWay}" 
@@ -67,7 +67,10 @@
                                     >
                         <DockingManager.AnchorableHeaderTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Content.DisplayName}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <ContentControl Content="{Binding Content.Icon}"/>
+                                    <TextBlock Text="{Binding Content.DisplayName}"/>
+                                </StackPanel>
                             </DataTemplate>
                         </DockingManager.AnchorableHeaderTemplate>
                         <DockingManager.DocumentHeaderTemplate>

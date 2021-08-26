@@ -12,10 +12,10 @@ namespace JdaTools.Studio.Helpers
         public static Task ShowChildWindowAsync(ChildWindow childWindow) =>
             MainWindow.ShowChildWindowAsync(childWindow);
 
-        public static Task<string> ShowInputDialogue(string title, string message)
+        public static async Task<string> ShowInputDialogue(string title, string message)
         {
 
-            return MainWindow.ShowInputAsync(title, message);
+            return await MainWindow.ShowInputAsync(title, message);
         }
     }
 }

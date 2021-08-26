@@ -17,9 +17,12 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
+using JdaTools.Studio.EventAggregatorMessages;
+using JdaTools.Studio.Helpers;
 using JdaTools.Studio.Models;
 using JdaTools.Studio.Views;
 using MahApps.Metro.SimpleChildWindow;
+using Application = System.Windows.Application;
 using Screen = Caliburn.Micro.Screen;
 
 namespace JdaTools.Studio.ViewModels
@@ -27,34 +30,36 @@ namespace JdaTools.Studio.ViewModels
     public class ShellViewModel : Screen, IHandle<string>
     {
         private readonly MocaClient _mocaClient;
-        private readonly SchemaExplorer _schemaExplorer;
         private LoginViewModel _loginViewModel;
-        
+        private readonly IEventAggregator _eventAggregator;
+        private readonly IWindowManager _windowManager;
 
-        public ShellViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer, IEventAggregator eventAggregator)
+
+        public ShellViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer, IEventAggregator eventAggregator, IWindowManager windowManager)
         {
             _eventAggregator = eventAggregator;
             _eventAggregator.SubscribeOnPublishedThread(this);
             _mocaClient = mocaClient;
-            _schemaExplorer = schemaExplorer;
-            Editors.Add(new EditorViewModel(_mocaClient));
+            _windowManager = windowManager;
             //TODO move to event aggregator
-            Tools.Add(new TablesViewModel(_mocaClient, _schemaExplorer, _eventAggregator));
-            Tools.Add(new FilesViewModel(_mocaClient, _schemaExplorer, _eventAggregator));
-            Tools.Add(new CommandsViewModel(_mocaClient, _schemaExplorer, _eventAggregator));
-            Login = new LoginViewModel(_mocaClient, _eventAggregator);
+
+
+        }
+
+        protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+        {
+            Tools.Add(IoC.Get<TablesViewModel>());
+            Tools.Add(IoC.Get<FilesViewModel>());
+            Tools.Add(IoC.Get<CommandsViewModel>());
+            Editors.Add(new EditorViewModel(_mocaClient));
+            Login = IoC.Get<LoginViewModel>();
+        }
+
+        protected override async void OnViewLoaded(object view)
+        {
+            
             
         }
-
-        private async void ShowLogin()
-        {
-            var viewModel = new LoginViewModel(_mocaClient, _eventAggregator);
-            var view = ViewLocator.LocateForModel(viewModel, null, null);
-            ViewModelBinder.Bind(viewModel, view, null);
-            var mainWindow = Helpers.DialogueHelper.MainWindow;
-            await mainWindow.ShowChildWindowAsync((ChildWindow)view);
-        }
-
 
         public LoginViewModel Login
         {
@@ -66,7 +71,7 @@ namespace JdaTools.Studio.ViewModels
             }
         }
 
-        public ObservableCollection<object> Tools { get; set; } = new ObservableCollection<object>();
+        public ObservableCollection<IScreen> Tools { get; set; } = new();
 
         private ObservableCollection<EditorViewModel> _editors = new ObservableCollection<EditorViewModel>();
 
@@ -79,10 +84,14 @@ namespace JdaTools.Studio.ViewModels
                 NotifyOfPropertyChange(() => _editors);
             }
         }
+        //Needed for hotkey
+        private ICommand _newEditorCommand;
+        public ICommand NewEditorCommand => _newEditorCommand ??= new RelayCommand(NewEditor);
 
-        private ICommand newEditorCommand;
-        public ICommand NewEditorCommand => newEditorCommand ??= new RelayCommand(NewEditor);
-
+        public async void Upload()
+        {
+            await _eventAggregator.PublishOnUIThreadAsync(EventMessages.UploadClickedEvent);
+        }
         internal void NewEditor()
         {
             var vm = new EditorViewModel(_mocaClient);
@@ -165,7 +174,7 @@ namespace JdaTools.Studio.ViewModels
         private ICommand saveCommand;
         public ICommand SaveCommand => saveCommand ??= new RelayCommand(Save);
         private ICommand openCommand;
-        private readonly IEventAggregator _eventAggregator;
+        
         public ICommand OpenCommand => openCommand ??= new RelayCommand(Open);
 
         public void Save()
@@ -221,7 +230,11 @@ namespace JdaTools.Studio.ViewModels
                 case EventMessages.LoginEvent:
                     LoginVisibility = Visibility.Collapsed;
                     break;
-            }
+                case EventMessages.UploadClickedEvent:
+                    SelectedEditor?.Upload();
+                    break;
+            } 
         }
+
     }
 }

@@ -21,13 +21,14 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Row="0" MinWidth="100"
-                 KeyUp="TextBox_KeyEnterUpdate"
+                     x:Name="SearchString"
+                     KeyUp="TextBox_KeyEnterUpdate"
                      mah:TextBoxHelper.Watermark="search tables"
-                 Text="{Binding SearchString}"/>
-            <Button Grid.Column="1"                    
-                Content="{iconpacks:Material Kind=Replay}" HorizontalAlignment="Right" Command="{Binding RefreshCommand}"/>
+                 />
+            <Button Grid.Column="1" x:Name="RefreshTables"
+                Content="{iconpacks:Material Kind=Replay}" HorizontalAlignment="Right"/>
         </Grid>
-        <TreeView Grid.Row="1" x:Name="TableListView" ItemsSource="{Binding Tables}"
+        <TreeView Grid.Row="1" x:Name="Tables"
                   VirtualizingStackPanel.IsVirtualizing="True"
                   VirtualizingStackPanel.VirtualizationMode="Recycling">
             <TreeView.ItemTemplate>
