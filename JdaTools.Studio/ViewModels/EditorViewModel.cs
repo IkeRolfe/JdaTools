@@ -7,9 +7,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Automation;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using ICSharpCode.AvalonEdit.Document;
+using JdaTools.Studio.Helpers;
 
 namespace JdaTools.Studio.ViewModels
 {
@@ -46,13 +48,13 @@ namespace JdaTools.Studio.ViewModels
         }
 
         private bool _shouldShowResultData { get; set; } = false;
-        public bool shouldShowResultData
+        public bool ShouldShowResultData
         {
             get => _shouldShowResultData;
             set
             {
                 _shouldShowResultData = value;
-                NotifyOfPropertyChange(() => shouldShowResultData);
+                NotifyOfPropertyChange(() => ShouldShowResultData);
             }
         }
         private string _title = "NEW EDITOR";
@@ -70,6 +72,17 @@ namespace JdaTools.Studio.ViewModels
             {
                 _localPath = value;
                 NotifyOfPropertyChange(()=>LocalPath);
+            }
+        }
+
+        private string _remotePath;
+        public string RemotePath
+        {
+            get => _remotePath;
+            set
+            {
+                _remotePath = value;
+                NotifyOfPropertyChange(() => RemotePath);
             }
         }
 
@@ -133,7 +146,7 @@ namespace JdaTools.Studio.ViewModels
                     ResultData = result.MocaResults.GetDataTable();
                 }
 
-                shouldShowResultData = true;
+                ShouldShowResultData = true;
                 SetInfoBar("Circle", "SpringGreen", false, $"SUCCESS : Returned {ResultData.Rows.Count} Rows");
             }
             IsBusy = false;
@@ -162,9 +175,22 @@ namespace JdaTools.Studio.ViewModels
         private TextDocument queryDocument = new();
         public TextDocument QueryDocument { get => queryDocument; set => SetProperty(ref queryDocument, value); }
 
-        public void Upload()
+        public async void Upload()
         {
-            Helpers.DialogueHelper.ShowInputDialogue("MOO", "MOO");
+            var dialogueAccepted = await Helpers.DialogueHelper.ShowDialogueYesNo($"UPLOAD {Title}", $"Are you sure you want to upload to {RemotePath} on server?\r\nThis will overwrite file if it exist.");
+            if (dialogueAccepted)
+            {
+                var result = await _mocaClient.ExecuteQuery("write output file where path = @path and data = @data", new
+                {
+                    path = RemotePath.Substring(0, RemotePath.LastIndexOf("\\", StringComparison.Ordinal)),
+                    filename = Title,
+                    data = QueryDocument.Text
+                });
+                if (result.status != 0)
+                {
+                    await DialogueHelper.ShowDialogueYesNo("ERROR UPLOADING", $"//TODO: {result.message}");
+                }
+            }
         }
     }
 }

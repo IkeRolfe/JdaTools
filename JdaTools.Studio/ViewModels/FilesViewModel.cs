@@ -145,7 +145,7 @@ namespace JdaTools.Studio.ViewModels
             }
 
             var commandText = commandDef?.LocalSyntax;*/
-            vm.NewEditor(text, false, file.FileName);
+            vm.NewEditor(text, false, file.FileName, null, file.PathName);
         }
 
         public async void NewFile()
@@ -153,13 +153,14 @@ namespace JdaTools.Studio.ViewModels
             var shellView = App.Current.MainWindow;
             var vm = (ShellViewModel)shellView.DataContext;
             var fileName = await Helpers.DialogueHelper.ShowInputDialogue("NEW FILE", "Enter new file name");
+            var path = Path.Combine(CurrentPath, fileName);
             Files.Add(new MocaFile
             {
                 FileName = fileName,
-                PathName = Path.Combine(CurrentPath, fileName),
+                PathName = path,
                 Type = "F"
             });
-            vm.NewEditor("", false, fileName);
+            vm.NewEditor("", false, fileName, null, path);
         }
 
         public async Task HandleAsync(string message, CancellationToken cancellationToken)

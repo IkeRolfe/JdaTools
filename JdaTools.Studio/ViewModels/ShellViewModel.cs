@@ -99,12 +99,15 @@ namespace JdaTools.Studio.ViewModels
             SelectedEditor = vm;
         }
 
-        internal void NewEditor(string query, bool execute = false, string title = null)
+        
+        internal void NewEditor(string query, bool execute = false, string title = null, string localPath = null, string remotePath = null)
         {
             var vm = new EditorViewModel(_mocaClient, query);
             if (title != null)
             {
                 vm.Title = title;
+                vm.LocalPath = localPath;
+                vm.RemotePath = remotePath;
             }
             Editors.Add(vm);
             SelectedEditor = vm;
@@ -236,5 +239,6 @@ namespace JdaTools.Studio.ViewModels
             } 
         }
 
+        
     }
 }

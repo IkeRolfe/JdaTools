@@ -17,5 +17,17 @@ namespace JdaTools.Studio.Helpers
 
             return await MainWindow.ShowInputAsync(title, message);
         }
+
+        public static async Task<bool> ShowDialogueYesNo(string title, string message)
+        {
+            var result = await MainWindow.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative,
+                new MetroDialogSettings
+                {
+                    AffirmativeButtonText = "YES",
+                    NegativeButtonText = "NO",
+                    DefaultButtonFocus = MessageDialogResult.Negative
+                });
+            return result == MessageDialogResult.Affirmative;
+        }
     }
 }
