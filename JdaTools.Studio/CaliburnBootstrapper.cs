@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using JdaTools.Connection;
+using JdaTools.Studio.AvalonEdit;
 using JdaTools.Studio.Services;
 
 namespace JdaTools.Studio
@@ -27,6 +28,7 @@ namespace JdaTools.Studio
             _container.Singleton<IWindowManager, WindowManager>();
             _container.Singleton<SchemaExplorer>();
             _container.Singleton<MocaClient>();
+            _container.Singleton<MocaHighlightingDefinition>();
             _container.PerRequest<ShellViewModel>();
             _container.PerRequest<TablesViewModel>();
             _container.PerRequest<FilesViewModel>();

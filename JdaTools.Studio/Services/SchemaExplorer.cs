@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Caliburn.Micro;
+using JdaTools.Studio.AvalonEdit;
 
 namespace JdaTools.Studio.Services
 {
@@ -80,8 +82,11 @@ namespace JdaTools.Studio.Services
         public async Task RefreshCommands()
         {
             var commands = await _mocaClient.ExecuteQuery<CommandDefinition>("list active commands;");
-                       
-            Commands = commands.OrderBy(c=>c.CommandName);
+            if (commands != null)
+            {
+                IoC.Get<MocaHighlightingDefinition>().SetCommands(commands.Select(c=>c.CommandName));
+                Commands = commands.OrderBy(c=>c.CommandName);
+            }
         }
 
         public async Task RefreshFiles()

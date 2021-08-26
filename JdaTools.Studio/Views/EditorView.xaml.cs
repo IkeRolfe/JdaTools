@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Caliburn.Micro;
+using JdaTools.Studio.AvalonEdit;
 
 namespace JdaTools.Studio.Views
 {
@@ -32,13 +33,15 @@ namespace JdaTools.Studio.Views
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            using var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("JdaTools.Studio.Resources.sql.xshd");
+            /*using var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("JdaTools.Studio.Resources.sql.xshd");
             using var reader = new System.Xml.XmlTextReader(stream);
             QueryTextBox.SyntaxHighlighting =
                 ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(reader,
-                ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance);
-            QueryTextBox.TextArea.TextEntered += textEditor_TextArea_TextEntered;
-            QueryTextBox.TextArea.TextEntering += textEditor_TextArea_TextEntering;
+                ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance);*/
+            //Turning off for now
+            //QueryTextBox.TextArea.TextEntered += textEditor_TextArea_TextEntered;
+            //QueryTextBox.TextArea.TextEntering += textEditor_TextArea_TextEntering;
+            //QueryTextBox.SyntaxHighlighting = new MocaHighlightingDefinition();
         }
         CompletionWindow completionWindow;
         private void textEditor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)

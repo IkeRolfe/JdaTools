@@ -9,8 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Automation;
 using System.Windows.Input;
+using Caliburn.Micro;
 using Microsoft.Toolkit.Mvvm.Input;
 using ICSharpCode.AvalonEdit.Document;
+using JdaTools.Studio.AvalonEdit;
 using JdaTools.Studio.Helpers;
 
 namespace JdaTools.Studio.ViewModels
@@ -31,6 +33,12 @@ namespace JdaTools.Studio.ViewModels
             QueryDocument.Text = query;
             SetInfoBar("Circle", "Gray", false, "");
         }
+
+        public MocaHighlightingDefinition HighlightingDefinition
+        {
+            get;
+        } = IoC.Get<MocaHighlightingDefinition>();
+
 
         private bool _isBusy;
         public bool IsBusy
@@ -175,6 +183,7 @@ namespace JdaTools.Studio.ViewModels
         private TextDocument queryDocument = new();
         public TextDocument QueryDocument { get => queryDocument; set => SetProperty(ref queryDocument, value); }
 
+        
         public async void Upload()
         {
             var dialogueAccepted = await Helpers.DialogueHelper.ShowDialogueYesNo($"UPLOAD {Title}", $"Are you sure you want to upload to {RemotePath} on server?\r\nThis will overwrite file if it exist.");
