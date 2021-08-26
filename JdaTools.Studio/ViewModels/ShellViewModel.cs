@@ -17,6 +17,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
+using ControlzEx.Theming;
 using JdaTools.Studio.EventAggregatorMessages;
 using JdaTools.Studio.Helpers;
 using JdaTools.Studio.Models;
@@ -41,8 +42,8 @@ namespace JdaTools.Studio.ViewModels
             _eventAggregator.SubscribeOnPublishedThread(this);
             _mocaClient = mocaClient;
             _windowManager = windowManager;
+            ThemeManager.Current.ChangeTheme(Application.Current, AppDataSettings.Default.IsDarkModeEnabled ? "Dark.Blue" : "Light.Blue");
             //TODO move to event aggregator
-
 
         }
 

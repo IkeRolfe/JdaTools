@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Caliburn.Micro;
+using ControlzEx.Theming;
 using Microsoft.Toolkit.Mvvm.Input;
 using JdaTools.ConfigurationManager;
 using JdaTools.Studio.EventAggregatorMessages;
@@ -26,6 +28,7 @@ namespace JdaTools.Studio.ViewModels
         private XMLManager _xmlManager;
         private ConnectionInfo _selectedConnection;
         private readonly IEventAggregator _eventAggregator;
+        private bool _isDarkModeEnabled;
 
         public LoginViewModel(MocaClient mocaClient, IEventAggregator eventAggregator)
         {
@@ -35,6 +38,7 @@ namespace JdaTools.Studio.ViewModels
             _xmlManager = new XMLManager();
             _xmlManager.ReadConfigurationFile("ConnectionConfigs.xml");
             SelectedConnection = _xmlManager._configs.Connections.FirstOrDefault(c => c.Default);
+            _isDarkModeEnabled = AppDataSettings.Default.IsDarkModeEnabled;
         }
 
 
@@ -90,6 +94,19 @@ namespace JdaTools.Studio.ViewModels
                 NotifyOfPropertyChange(() => Password);
             }
         }
+
+        public bool IsDarkModeEnabled
+        {
+            get => AppDataSettings.Default.IsDarkModeEnabled;
+            set
+            {
+                AppDataSettings.Default.IsDarkModeEnabled = value;
+                AppDataSettings.Default.Save();
+
+                ThemeManager.Current.ChangeTheme(Application.Current, IsDarkModeEnabled? "Dark.Blue" : "Light.Blue");
+            }
+        }
+
         private bool _isBusy;
 
         public bool IsBusy
