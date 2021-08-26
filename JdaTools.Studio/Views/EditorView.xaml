@@ -16,15 +16,45 @@
                     Key="Return"
                     Command="{Binding ExecuteCommand}" />
     </UserControl.InputBindings>
+
+
     <Grid>
+        <Grid.Resources>
+            <Style x:Key="dataGridStyle" TargetType="{x:Type RowDefinition}">
+                <Style.Setters>
+                    <Setter Property="Height" Value="0"/>
+                </Style.Setters>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding shouldShowResultData}" Value="True">
+                        <DataTrigger.Setters>
+                            <Setter Property="Height" Value="*"/>
+                        </DataTrigger.Setters>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="editorStyle" TargetType="{x:Type RowDefinition}">
+                <Style.Setters>
+                    <Setter Property="Height" Value="*"/>
+                </Style.Setters>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding shouldShowResultData}" Value="True">
+                        <DataTrigger.Setters>
+                            <Setter Property="Height" Value="*"/>
+                        </DataTrigger.Setters>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Style="{StaticResource editorStyle}"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Style="{StaticResource dataGridStyle}"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
+
         <avalonedit:TextEditor Grid.Row="1"
                                x:Name="QueryTextBox"
                                IsEnabledChanged="QueryTextBox_IsEnabledChanged"

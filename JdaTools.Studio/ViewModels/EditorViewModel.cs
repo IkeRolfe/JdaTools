@@ -44,6 +44,17 @@ namespace JdaTools.Studio.ViewModels
             get => _resultData;
             set => SetProperty(ref _resultData, value);
         }
+
+        private bool _shouldShowResultData { get; set; } = false;
+        public bool shouldShowResultData
+        {
+            get => _shouldShowResultData;
+            set
+            {
+                _shouldShowResultData = value;
+                NotifyOfPropertyChange(() => shouldShowResultData);
+            }
+        }
         private string _title = "NEW EDITOR";
 
         public string Title
@@ -121,6 +132,8 @@ namespace JdaTools.Studio.ViewModels
                 {
                     ResultData = result.MocaResults.GetDataTable();
                 }
+
+                shouldShowResultData = true;
                 SetInfoBar("Circle", "SpringGreen", false, $"SUCCESS : Returned {ResultData.Rows.Count} Rows");
             }
             IsBusy = false;
