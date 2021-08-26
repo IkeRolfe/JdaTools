@@ -162,5 +162,9 @@ namespace JdaTools.Studio.ViewModels
         private TextDocument queryDocument = new();
         public TextDocument QueryDocument { get => queryDocument; set => SetProperty(ref queryDocument, value); }
 
+        public void Upload()
+        {
+            Helpers.DialogueHelper.ShowInputDialogue("MOO", "MOO");
+        }
     }
 }

@@ -28,6 +28,10 @@ namespace JdaTools.Studio
             _container.Singleton<SchemaExplorer>();
             _container.Singleton<MocaClient>();
             _container.PerRequest<ShellViewModel>();
+            _container.PerRequest<TablesViewModel>();
+            _container.PerRequest<FilesViewModel>();
+            _container.PerRequest<CommandsViewModel>();
+            _container.PerRequest<LoginViewModel>();
             //Hotkey parser
 
         }

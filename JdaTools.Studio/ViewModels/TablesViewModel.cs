@@ -14,22 +14,17 @@ using JdaTools.Studio.Services;
 using JdaTools.Studio.Models;
 using JdaTools.Studio.Views;
 using Caliburn.Micro;
+using JdaTools.Studio.EventAggregatorMessages;
+using JdaTools.Studio.Helpers;
 
 namespace JdaTools.Studio.ViewModels
 {
-    public class TablesViewModel : Screen, IHandle<string>
+    public class TablesViewModel : ToolsetViewBase, IHandle<string>
     {
-        private MocaClient _mocaClient;
-        private SchemaExplorer _schemaExplorer;
-        private IEventAggregator _eventAggregator;
-
-        public TablesViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer, IEventAggregator eventAggregator)
+        public TablesViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer, IEventAggregator eventAggregator) : base(mocaClient, schemaExplorer, eventAggregator)
         {
-            _mocaClient = mocaClient;
-            _schemaExplorer = schemaExplorer;
-            _eventAggregator = eventAggregator;
-            _eventAggregator.SubscribeOnPublishedThread(this);
         }
+
         public override string DisplayName { get; set; } = "TABLES";
 
         public IEnumerable<TableDefinition> Tables => GetFilteredTables();
@@ -48,14 +43,12 @@ namespace JdaTools.Studio.ViewModels
 
         }
 
-        private ICommand refreshCommand;
-        public ICommand RefreshCommand => refreshCommand ??= new RelayCommand(Refresh);
-
-        private async void Refresh()
+        
+        public async void RefreshTables()
         {
             IsBusy = true;
             await _schemaExplorer.RefreshTables();
-            NotifyOfPropertyChange(nameof(Tables));
+            NotifyOfPropertyChange(()=>Tables);
             IsBusy = false;
         }
 
@@ -71,9 +64,7 @@ namespace JdaTools.Studio.ViewModels
             }
         }
 
-        private ICommand generateSelect;
-        public ICommand GenerateSelect => generateSelect ??= new RelayCommand<string>(t => PerformGenerateSelect(t));
-
+        
         internal void PerformGenerateSelect(string tableName)
         {
             //TODO: Move to messaging service
@@ -94,24 +85,12 @@ namespace JdaTools.Studio.ViewModels
             }
         }
 
-        private bool isBusy;
-
-        public bool IsBusy
-        {
-            get => isBusy;
-            set
-            {
-                isBusy = value;
-                NotifyOfPropertyChange(() => IsBusy);
-            }
-        }
-
         public async Task HandleAsync(string message, CancellationToken cancellationToken)
         {
             switch (message)
             {
                 case EventMessages.LoginEvent:
-                    Refresh();
+                    RefreshTables();
                     break;
             }
         }
