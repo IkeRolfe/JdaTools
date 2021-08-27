@@ -19,7 +19,9 @@
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.1.2.30" />
     <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
-    <PackageReference Include="Dirkster.AvalonDock" Version="4.51.1" />
+    <PackageReference Include="Dirkster.AvalonDock" Version="4.60.0" />
+    <PackageReference Include="Dirkster.AvalonDock.Themes.Expression" Version="4.60.0" />
+    <PackageReference Include="Dirkster.AvalonDock.Themes.VS2013" Version="4.60.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.7" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.8.0" />
     <PackageReference Include="MahApps.Metro.SimpleChildWindow" Version="2.0.0" />
@@ -34,6 +36,21 @@
 
   <ItemGroup>
     <Folder Include="Behaviors\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="AppDataSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AppDataSettings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="AppDataSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AppDataSettings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

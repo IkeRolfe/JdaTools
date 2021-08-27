@@ -28,6 +28,7 @@
                          CharacterCasing="Upper" MinWidth="200"/>
                 <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" mah:TextBoxHelper.Watermark="Password" />
                 <Button Content="LOGIN" Command="{Binding LoginCommand}" IsDefault="True"/>
+                <CheckBox IsChecked="{Binding IsDarkModeEnabled}">Dark Mode</CheckBox>
             </StackPanel>
         </StackPanel>
     </Grid>

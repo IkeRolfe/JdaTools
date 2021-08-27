@@ -59,6 +59,8 @@
                                x:Name="QueryTextBox"
                                IsEnabledChanged="QueryTextBox_IsEnabledChanged"
                                ShowLineNumbers="True" 
+                               Foreground="{StaticResource MahApps.Brushes.Text}"
+                               FontSize="16"
                                Document="{Binding QueryDocument}" 
                                SyntaxHighlighting="{Binding HighlightingDefinition}"
                                >
@@ -86,7 +88,7 @@
                            Fill="{StaticResource MahApps.Brushes.Button.Border}">
                 </Rectangle>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Background="{StaticResource MahApps.Brushes.Control.Background}">
+            <StackPanel Orientation="Horizontal">
                 <ContentControl Margin="2" Focusable="False" HorizontalAlignment="Center">
                     <iconPacks2:PackIconMaterial Kind="{Binding InfoBarIcon}"
                                             Margin="0"

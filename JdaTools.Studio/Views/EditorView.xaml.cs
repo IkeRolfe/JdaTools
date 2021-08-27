@@ -33,22 +33,15 @@ namespace JdaTools.Studio.Views
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            /*using var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("JdaTools.Studio.Resources.sql.xshd");
-            using var reader = new System.Xml.XmlTextReader(stream);
-            QueryTextBox.SyntaxHighlighting =
-                ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(reader,
-                ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance);*/
-            //Turning off for now
             //QueryTextBox.TextArea.TextEntered += textEditor_TextArea_TextEntered;
             //QueryTextBox.TextArea.TextEntering += textEditor_TextArea_TextEntering;
-            //QueryTextBox.SyntaxHighlighting = new MocaHighlightingDefinition();
         }
-        CompletionWindow completionWindow;
+        CompletionWindow _completionWindow;
         private void textEditor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
         {
-            if (completionWindow != null && !completionWindow.CompletionList.CompletionData.Any())
+            if (_completionWindow != null && !_completionWindow.CompletionList.CompletionData.Any())
             {
-                completionWindow?.Close();
+                _completionWindow?.Close();
             }
             var fullText = QueryTextBox.TextArea.Document.Text;
             var textToCursor = fullText.ToLower().Substring(0,QueryTextBox.CaretOffset);
@@ -59,24 +52,28 @@ namespace JdaTools.Studio.Views
 
             if (textToCursor.LastIndexOf(']') >= textToCursor.LastIndexOf('['))
             {
-                return; //TODO hand autocomplete with spaces
                 //Autocomplet MOCA
-                if (completionWindow?.IsVisible ?? false)
+                if (_completionWindow?.IsVisible ?? false)
                 {
                     return;
                 }
-                if (lastWord.Length < 3)
+                if (lastWord.Length < 1)
                 {
                     return;
                 }
-                if (completionWindow == null)
+                if (_completionWindow == null)
                 {
-                    completionWindow = new CompletionWindow(QueryTextBox.TextArea);
+                    _completionWindow = new CompletionWindow(QueryTextBox.TextArea);
+                }
+
+                if (schema.Commands == null)
+                {
+                    return;
                 }
 
                 var commands = schema.Commands.Select(c => c.CommandName).Distinct()
                     .Where(c => c.StartsWith(lastWord, StringComparison.InvariantCultureIgnoreCase));
-                IList<ICompletionData> data = completionWindow.CompletionList.CompletionData;
+                IList<ICompletionData> data = _completionWindow.CompletionList.CompletionData;
                 foreach (var command in commands)
                 {
                     if (!data.Select(d => d.Text).Contains(command))
@@ -84,17 +81,14 @@ namespace JdaTools.Studio.Views
                         data.Add(new MyCompletionData(command));
                     }
                 }
-                completionWindow.Show();
-                completionWindow.Closed += delegate {
-                    completionWindow = null;
+                _completionWindow.Show();
+                _completionWindow.Closed += delegate {
+                    _completionWindow = null;
                 };
             }
 
-            if (e.Text == " ")
-            {
-                
-                
-
+            if (e.Text == " ") 
+            { 
                 //Last position of [ or ] lets us know if we are working sql or moca
                 
                 lastWord = lastWord.Replace("[", "");
@@ -112,7 +106,7 @@ namespace JdaTools.Studio.Views
                         return;
                     }
                     //TODO check joins
-                    var tableName = forwardBlocks[fromPosition + 1];
+                    var tableName = Regex.Replace(forwardBlocks[fromPosition + 1], "[^a-zA-Z\\d]", "");
                     // Open code completion after the user has pressed dot:
                     var columns = schema.Tables.FirstOrDefault(t => t.TableName.Equals(tableName, StringComparison.InvariantCultureIgnoreCase))?
                         .Columns.Select(c => c.ColumnName);
@@ -120,30 +114,30 @@ namespace JdaTools.Studio.Views
                     {
                         return;
                     }
-                    completionWindow = new CompletionWindow(QueryTextBox.TextArea);
-                    IList<ICompletionData> data = completionWindow.CompletionList.CompletionData;
+                    _completionWindow = new CompletionWindow(QueryTextBox.TextArea);
+                    IList<ICompletionData> data = _completionWindow.CompletionList.CompletionData;
                     foreach (var col in columns)
                     {
                         data.Add(new MyCompletionData(col));
                     }
-                    completionWindow.Show();
-                    completionWindow.Closed += delegate {
-                        completionWindow = null;
+                    _completionWindow.Show();
+                    _completionWindow.Closed += delegate {
+                        _completionWindow = null;
                     };
                 }
                 else if (lastWord.Equals("from",StringComparison.InvariantCultureIgnoreCase))
                 {
-                    completionWindow = new CompletionWindow(QueryTextBox.TextArea);
-                    IList<ICompletionData> data = completionWindow.CompletionList.CompletionData;
+                    _completionWindow = new CompletionWindow(QueryTextBox.TextArea);
+                    IList<ICompletionData> data = _completionWindow.CompletionList.CompletionData;
                     
                     var completionData = schema.Tables.Select(t => new MyCompletionData(t.TableName)).ToList();
                     foreach (var item in completionData)
                     {
                         data.Add(item);
                     }
-                    completionWindow.Show();
-                    completionWindow.Closed += delegate {
-                        completionWindow = null;
+                    _completionWindow.Show();
+                    _completionWindow.Closed += delegate {
+                        _completionWindow = null;
                     };
                 }
             }
@@ -151,13 +145,13 @@ namespace JdaTools.Studio.Views
 
         void textEditor_TextArea_TextEntering(object sender, TextCompositionEventArgs e)
         {
-            if (e.Text.Length > 0 && completionWindow != null)
+            if (e.Text.Length > 0 && _completionWindow != null)
             {
                 if (!char.IsLetterOrDigit(e.Text[0]))
                 {
                     // Whenever a non-letter is typed while the completion window is open,
                     // insert the currently selected element.
-                    completionWindow.CompletionList.RequestInsertion(e);
+                    _completionWindow.CompletionList.RequestInsertion(e);
                 }
             }
             // Do not set e.Handled=true.
