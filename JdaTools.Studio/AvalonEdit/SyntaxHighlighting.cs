@@ -52,7 +52,7 @@ namespace JdaTools.Studio.AvalonEdit
     {
         public static HighlightingColor StringColor { get; } = GetHighlightingColor(Colors.DarkOrange);
         public static HighlightingColor CommentColor { get; } = GetHighlightingColor(Colors.Green);
-        public static HighlightingColor KeyWordColor { get; } = GetHighlightingColor(Colors.Purple);
+        public static HighlightingColor KeyWordColor { get; } = GetHighlightingColor(Colors.MediumPurple);
         public static HighlightingColor XmlTagColor { get; } = GetHighlightingColor(Colors.Gray);
         public static HighlightingColor CommandColor { get; } = GetHighlightingColor(Colors.CornflowerBlue);
         public static HighlightingSpan CommentSpan { get; } = BuildSpan("--", "$", CommentColor);

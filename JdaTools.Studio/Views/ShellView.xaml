@@ -13,8 +13,9 @@
                   xmlns:iconpacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                   xmlns:cm="http://caliburnmicro.com"
                   xmlns:simpleChildWindow="http://metro.mahapps.com/winfx/xaml/simplechildwindow"
+                  xmlns:avalonEdit="clr-namespace:JdaTools.Studio.AvalonEdit"
                   Title="JDA EXPLORER" Height="900" Width="1600">
-    <Window.InputBindings>
+    <mah:MetroWindow.InputBindings>
         <KeyBinding Modifiers="Control"
                     Key="N"
                     Command="{Binding NewEditorCommand}" />
@@ -24,7 +25,19 @@
         <KeyBinding Modifiers="Control"
                     Key="O"
                     Command="{Binding OpenCommand}"/>
-    </Window.InputBindings>
+    </mah:MetroWindow.InputBindings>
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <mah:ToggleSwitch IsOn="{Binding IsDarkModeEnabled}">
+                <mah:ToggleSwitch.OnContent>
+                    <iconpacks:Material Kind="MoonWaningCrescent"/>
+                </mah:ToggleSwitch.OnContent>
+                <mah:ToggleSwitch.OffContent>
+                    <iconpacks:Material Kind="WeatherSunny"/>
+                </mah:ToggleSwitch.OffContent>
+            </mah:ToggleSwitch>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
     <Grid>
         <Grid IsEnabled="{Binding IsEnabled}">
             <Grid.RowDefinitions>
@@ -64,7 +77,8 @@
                                     ActiveContent="{Binding SelectedEditor, Mode=TwoWay}" 
                                     ActiveContentChanged="Editors_OnActiveContentChanged"
                                     AnchorablesSource="{Binding Tools}"
-                                    >
+                                    Theme="{Binding EditorTheme}">
+                        
                         <DockingManager.AnchorableHeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -73,16 +87,33 @@
                                 </StackPanel>
                             </DataTemplate>
                         </DockingManager.AnchorableHeaderTemplate>
+                        <DockingManager.AnchorableTitleTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <ContentControl Content="{Binding Content.Icon}"/>
+                                    <TextBlock Text="{Binding Content.DisplayName}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DockingManager.AnchorableTitleTemplate>
                         <DockingManager.DocumentHeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Content.Title}"/>
                             </DataTemplate>
                         </DockingManager.DocumentHeaderTemplate>
-                        <DockingManager.LayoutItemTemplate>
-                            <DataTemplate>
-                                <ContentControl cm:View.Model="{Binding Content}" IsTabStop="False"/>
-                            </DataTemplate>
-                        </DockingManager.LayoutItemTemplate>
+                        <DockingManager.LayoutItemTemplateSelector>
+                            <avalonEdit:AvalonTemplateSelector>
+                                <avalonEdit:AvalonTemplateSelector.ContentTemplate>
+                                    <DataTemplate>
+                                        <ContentControl cm:View.Model="{Binding  Content}" IsTabStop="False"/>
+                                    </DataTemplate>
+                                </avalonEdit:AvalonTemplateSelector.ContentTemplate>
+                                <avalonEdit:AvalonTemplateSelector.BindingTemplate>
+                                    <DataTemplate>
+                                        <ContentControl cm:View.Model="{Binding  }" IsTabStop="False"/>
+                                    </DataTemplate>
+                                </avalonEdit:AvalonTemplateSelector.BindingTemplate>
+                            </avalonEdit:AvalonTemplateSelector>
+                        </DockingManager.LayoutItemTemplateSelector>
                     </DockingManager>
                 </Grid>
             </Grid>

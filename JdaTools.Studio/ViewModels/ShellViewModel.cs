@@ -17,6 +17,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
+using AvalonDock.Themes;
 using ControlzEx.Theming;
 using JdaTools.Studio.EventAggregatorMessages;
 using JdaTools.Studio.Helpers;
@@ -34,6 +35,8 @@ namespace JdaTools.Studio.ViewModels
         private LoginViewModel _loginViewModel;
         private readonly IEventAggregator _eventAggregator;
         private readonly IWindowManager _windowManager;
+        private readonly object _lightTheme = new Vs2013LightTheme();
+        private readonly object _darkTheme = new Vs2013DarkTheme();
 
 
         public ShellViewModel(MocaClient mocaClient, SchemaExplorer schemaExplorer, IEventAggregator eventAggregator, IWindowManager windowManager)
@@ -42,7 +45,8 @@ namespace JdaTools.Studio.ViewModels
             _eventAggregator.SubscribeOnPublishedThread(this);
             _mocaClient = mocaClient;
             _windowManager = windowManager;
-            ThemeManager.Current.ChangeTheme(Application.Current, AppDataSettings.Default.IsDarkModeEnabled ? "Dark.Blue" : "Light.Blue");
+            ThemeManager.Current.ChangeTheme(Application.Current, IsDarkModeEnabled ? "Dark.Blue" : "Light.Blue");
+            EditorTheme = IsDarkModeEnabled ? _darkTheme : _lightTheme;
             //TODO move to event aggregator
 
         }
@@ -69,6 +73,30 @@ namespace JdaTools.Studio.ViewModels
             {
                 _loginViewModel = value;
                 NotifyOfPropertyChange(()=>Login);
+            }
+        }
+
+        public bool IsDarkModeEnabled
+        {
+            get => AppDataSettings.Default.IsDarkModeEnabled;
+            set
+            {
+                AppDataSettings.Default.IsDarkModeEnabled = value;
+                AppDataSettings.Default.Save();
+                ThemeManager.Current.ChangeTheme(Application.Current, IsDarkModeEnabled ? "Dark.Blue" : "Light.Blue");
+                EditorTheme = value ? _darkTheme : _lightTheme;
+            }
+        }
+
+        private object _editorTheme;
+        public object EditorTheme
+        {
+            get => _editorTheme;
+            set
+            {
+
+                _editorTheme = value;
+                NotifyOfPropertyChange(() => EditorTheme);
             }
         }
 

@@ -94,18 +94,7 @@ namespace JdaTools.Studio.ViewModels
                 NotifyOfPropertyChange(() => Password);
             }
         }
-
-        public bool IsDarkModeEnabled
-        {
-            get => AppDataSettings.Default.IsDarkModeEnabled;
-            set
-            {
-                AppDataSettings.Default.IsDarkModeEnabled = value;
-                AppDataSettings.Default.Save();
-
-                ThemeManager.Current.ChangeTheme(Application.Current, IsDarkModeEnabled? "Dark.Blue" : "Light.Blue");
-            }
-        }
+        
 
         private bool _isBusy;
 

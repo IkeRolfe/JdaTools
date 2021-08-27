@@ -122,7 +122,7 @@ namespace JdaTools.Studio.ViewModels
         internal async void OpenDirectory(MocaDirectory directory)
         {
             await directory.RefreshFiles();
-            Files = new ObservableCollection<IMocaFile>(directory.Files);
+            Files = new ObservableCollection<IMocaFile>(directory.Files.OrderBy(f=>f.Type).ThenBy(f=>f.FileName));
             NotifyOfPropertyChange(nameof(Files));
             CurrentPath = directory.PathName;
         }
@@ -152,7 +152,7 @@ namespace JdaTools.Studio.ViewModels
         {
             var shellView = App.Current.MainWindow;
             var vm = (ShellViewModel)shellView.DataContext;
-            var fileName = await Helpers.DialogueHelper.ShowInputDialogue("NEW FILE", "Enter new file name");
+            var fileName = await DialogueHelper.ShowInputDialogue("NEW FILE", "Enter new file name");
             var path = Path.Combine(CurrentPath, fileName);
             Files.Add(new MocaFile
             {
