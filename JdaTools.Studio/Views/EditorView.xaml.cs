@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Caliburn.Micro;
 using JdaTools.Studio.AvalonEdit;
+using JdaTools.Studio.ViewModels;
 
 namespace JdaTools.Studio.Views
 {
@@ -33,8 +34,8 @@ namespace JdaTools.Studio.Views
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            //QueryTextBox.TextArea.TextEntered += textEditor_TextArea_TextEntered;
-            //QueryTextBox.TextArea.TextEntering += textEditor_TextArea_TextEntering;
+            //TextEditor.TextArea.TextEntered += textEditor_TextArea_TextEntered;
+            //TextEditor.TextArea.TextEntering += textEditor_TextArea_TextEntering;
         }
         CompletionWindow _completionWindow;
         private void textEditor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
@@ -43,10 +44,10 @@ namespace JdaTools.Studio.Views
             {
                 _completionWindow?.Close();
             }
-            var fullText = QueryTextBox.TextArea.Document.Text;
-            var textToCursor = fullText.ToLower().Substring(0,QueryTextBox.CaretOffset);
-            var backBlocks = Regex.Split(fullText.ToLower().Substring(0, QueryTextBox.CaretOffset - 1), @"\s+");
-            var forwardBlocks = Regex.Split(fullText.ToLower().Substring(QueryTextBox.CaretOffset), @"\s+");
+            var fullText = TextEditor.TextArea.Document.Text;
+            var textToCursor = fullText.ToLower().Substring(0, TextEditor.CaretOffset);
+            var backBlocks = Regex.Split(fullText.ToLower().Substring(0, TextEditor.CaretOffset - 1), @"\s+");
+            var forwardBlocks = Regex.Split(fullText.ToLower().Substring(TextEditor.CaretOffset), @"\s+");
             var schema = IoC.Get<SchemaExplorer>();
             var lastWord = backBlocks.Last();
 
@@ -63,7 +64,7 @@ namespace JdaTools.Studio.Views
                 }
                 if (_completionWindow == null)
                 {
-                    _completionWindow = new CompletionWindow(QueryTextBox.TextArea);
+                    _completionWindow = new CompletionWindow(TextEditor.TextArea);
                 }
 
                 if (schema.Commands == null)
@@ -114,7 +115,7 @@ namespace JdaTools.Studio.Views
                     {
                         return;
                     }
-                    _completionWindow = new CompletionWindow(QueryTextBox.TextArea);
+                    _completionWindow = new CompletionWindow(TextEditor.TextArea);
                     IList<ICompletionData> data = _completionWindow.CompletionList.CompletionData;
                     foreach (var col in columns)
                     {
@@ -127,7 +128,7 @@ namespace JdaTools.Studio.Views
                 }
                 else if (lastWord.Equals("from",StringComparison.InvariantCultureIgnoreCase))
                 {
-                    _completionWindow = new CompletionWindow(QueryTextBox.TextArea);
+                    _completionWindow = new CompletionWindow(TextEditor.TextArea);
                     IList<ICompletionData> data = _completionWindow.CompletionList.CompletionData;
                     
                     var completionData = schema.Tables.Select(t => new MyCompletionData(t.TableName)).ToList();
@@ -168,7 +169,7 @@ namespace JdaTools.Studio.Views
 
         }
         //TODO: Not wo
-        private void QueryTextBox_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void TextEditor_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var editor = (Control)sender;
             if (editor.IsEnabled)

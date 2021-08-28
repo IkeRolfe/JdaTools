@@ -65,7 +65,7 @@ namespace JdaTools.Studio.AvalonEdit
         };
         public static HighlightingRule XmlTagRule { get; } = new HighlightingRule
         {
-            Regex = new Regex(@"</?(.*?\w)>"),
+            Regex = new Regex(@"</?(.*?\w)/?>"),
             Color = XmlTagColor
         };
 

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:JdaTools.Studio.Views" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:viewmodels="clr-namespace:JdaTools.Studio.ViewModels" 
              xmlns:iconpacks="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.Material"
              xmlns:iconPacks2="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:avalonEdit="clr-namespace:JdaTools.Studio.AvalonEdit"
              Loaded="UserControl_Loaded"
              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
              d:DataContext="{d:DesignInstance viewmodels:EditorViewModel, IsDesignTimeCreatable=True}"
@@ -55,17 +56,19 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <avalonedit:TextEditor Grid.Row="1"
-                               x:Name="QueryTextBox"
-                               IsEnabledChanged="QueryTextBox_IsEnabledChanged"
+        <avalonEdit:MvvmTextEditor Grid.Row="1"
+                               x:Name="TextEditor"
+                               IsEnabledChanged="TextEditor_IsEnabledChanged"
+                               SelectionStart="{Binding SelectionStart, Mode=TwoWay}"
+                               SelectionLength="{Binding SelectionLength, Mode=TwoWay}"
                                ShowLineNumbers="True" 
+                               LineNumbersForeground="CornflowerBlue"
                                Foreground="{StaticResource MahApps.Brushes.Text}"
                                FontSize="16"
                                Document="{Binding QueryDocument}" 
                                SyntaxHighlighting="{Binding HighlightingDefinition}"
                                >
-                        
-        </avalonedit:TextEditor>
+        </avalonEdit:MvvmTextEditor>
         
         <GridSplitter Grid.Row="2" Margin="2,0,2,0"
                   Height="3" 

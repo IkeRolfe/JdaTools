@@ -130,7 +130,8 @@ namespace JdaTools.Studio.ViewModels
         {
             IsBusy = true;
             SetInfoBar("Autorenew", "DarkSlateBlue", true, "Executing Query");
-            var query = QueryDocument.Text;
+
+            var query = SelectionLength > 0 ? SelectedText : QueryDocument.Text;
             if (string.IsNullOrEmpty(query))
             {
                 return;
@@ -183,7 +184,11 @@ namespace JdaTools.Studio.ViewModels
         private TextDocument queryDocument = new();
         public TextDocument QueryDocument { get => queryDocument; set => SetProperty(ref queryDocument, value); }
 
-        
+        public int SelectionStart { get; set; }
+        public int SelectionLength { get; set; }
+        public string SelectedText => QueryDocument.GetText(SelectionStart, SelectionLength);
+
+
         public async void Upload()
         {
             var dialogueAccepted = await Helpers.DialogueHelper.ShowDialogueYesNo($"UPLOAD {Title}", $"Are you sure you want to upload to {RemotePath} on server?\r\nThis will overwrite file if it exist.");
