@@ -55,7 +55,7 @@ namespace JdaTools.Studio.AvalonEdit
         public static HighlightingColor KeyWordColor { get; } = GetHighlightingColor(Colors.MediumPurple);
         public static HighlightingColor XmlTagColor { get; } = GetHighlightingColor(Colors.Gray);
         public static HighlightingColor CommandColor { get; } = GetHighlightingColor(Colors.CornflowerBlue);
-        public static HighlightingSpan CommentSpan { get; } = BuildSpan("--", "$", CommentColor);
+        public static HighlightingSpan CommentSpan { get; } = BuildSpan("--|//", "$", CommentColor);
         public static HighlightingSpan BlockCommentSpan { get; } = BuildSpan("/\\*", "\\*/", CommentColor);
         //Use rule for strings because start has to match end
         public static HighlightingRule StringRule { get; } = new HighlightingRule
