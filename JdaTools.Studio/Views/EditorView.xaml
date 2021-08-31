@@ -7,6 +7,7 @@
              xmlns:iconpacks="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.Material"
              xmlns:iconPacks2="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:avalonEdit="clr-namespace:JdaTools.Studio.AvalonEdit"
+             xmlns:controls="clr-namespace:JdaTools.Studio.Controls"
              Loaded="UserControl_Loaded"
              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
              d:DataContext="{d:DesignInstance viewmodels:EditorViewModel, IsDesignTimeCreatable=True}"
@@ -56,7 +57,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <avalonEdit:MvvmTextEditor Grid.Row="1"
+        <controls:MocaEditor Grid.Row="1"
                                x:Name="TextEditor"
                                IsEnabledChanged="TextEditor_IsEnabledChanged"
                                SelectionStart="{Binding SelectionStart, Mode=TwoWay}"
@@ -68,7 +69,7 @@
                                Document="{Binding QueryDocument}" 
                                SyntaxHighlighting="{Binding HighlightingDefinition}"
                                >
-        </avalonEdit:MvvmTextEditor>
+        </controls:MocaEditor>
         
         <GridSplitter Grid.Row="2" Margin="2,0,2,0"
                   Height="3" 
@@ -104,6 +105,8 @@
                 </ContentControl>
                 <TextBlock Text="{Binding InfoBarText}" VerticalAlignment="Center"
                        Foreground="{StaticResource MahApps.Brushes.Text}"/>
+                <TextBlock Text="{Binding ElementName=TextEditor, Path=CurrentSyntax}" VerticalAlignment="Center"
+                           Foreground="Red"/>
             </StackPanel>
         </StackPanel>
     </Grid>

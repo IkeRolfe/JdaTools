@@ -32,7 +32,7 @@ namespace JdaTools.Studio.Views
         public EditorView()
         {
             InitializeComponent();
-            SearchPanel.Install(TextEditor);
+            
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -94,7 +94,6 @@ namespace JdaTools.Studio.Views
             if (e.Text == " ") 
             { 
                 //Last position of [ or ] lets us know if we are working sql or moca
-                
                 lastWord = lastWord.Replace("[", "");
                 if (lastWord == "select" || lastWord.LastOrDefault() == ',')
                 {

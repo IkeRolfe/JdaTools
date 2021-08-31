@@ -3,8 +3,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Search;
 
-namespace JdaTools.Studio.AvalonEdit
+namespace JdaTools.Studio.Controls
 {
     /// <summary>
     /// Class that inherits from the AvalonEdit TextEditor control to 
@@ -17,6 +18,7 @@ namespace JdaTools.Studio.AvalonEdit
         /// </summary>
         public MvvmTextEditor()
         {
+            SearchPanel.Install(this); //Enable search with ctrl+f
             TextArea.SelectionChanged += TextArea_SelectionChanged;
         }
 
@@ -46,24 +48,21 @@ namespace JdaTools.Studio.AvalonEdit
         /// </summary>
         public new string Text
         {
-            get { return base.Text; }
-            set { base.Text = value; }
+            get => base.Text;
+            set => base.Text = value;
         }
 
         /// <summary>
         /// Return the current text length.
         /// </summary>
-        public int Length
-        {
-            get { return base.Text.Length; }
-        }
+        public int Length => base.Text.Length;
 
         /// <summary>
         /// Override of OnTextChanged event.
         /// </summary>
         protected override void OnTextChanged(EventArgs e)
         {
-            RaisePropertyChanged("Length");
+            RaisePropertyChanged(nameof(Length));
             base.OnTextChanged(e);
         }
         #endregion // Text.
@@ -85,8 +84,8 @@ namespace JdaTools.Studio.AvalonEdit
         /// </summary>
         public new int CaretOffset
         {
-            get { return base.CaretOffset; }
-            set { base.CaretOffset = value; }
+            get => base.CaretOffset;
+            set => base.CaretOffset = value;
         }
         #endregion // Caret Offset.
 
@@ -107,8 +106,8 @@ namespace JdaTools.Studio.AvalonEdit
         /// </summary>
         public new int SelectionLength
         {
-            get { return base.SelectionLength; }
-            set { SetValue(SelectionLengthProperty, value); }
+            get => base.SelectionLength;
+            set => SetValue(SelectionLengthProperty, value);
         }
 
         /// <summary>
@@ -127,8 +126,8 @@ namespace JdaTools.Studio.AvalonEdit
         /// </summary>
         public new int SelectionStart
         {
-            get { return base.SelectionStart; }
-            set { SetValue(SelectionStartProperty, value); }
+            get => base.SelectionStart;
+            set => SetValue(SelectionStartProperty, value);
         }
         #endregion // Selection.
 
@@ -140,7 +139,7 @@ namespace JdaTools.Studio.AvalonEdit
         {
             var handler = PropertyChanged;
             if (handler != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(caller));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(caller));
         }
     }
 }
