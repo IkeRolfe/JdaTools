@@ -15,7 +15,7 @@
     <UserControl.InputBindings>
         <KeyBinding Modifiers="Control"
                     Key="Return"
-                    Command="{Binding ExecuteCommand}" />
+                    Command="{Binding ExecuteCommand}" />   
     </UserControl.InputBindings>
 
 

@@ -17,8 +17,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Caliburn.Micro;
+using ICSharpCode.AvalonEdit.Search;
 using JdaTools.Studio.AvalonEdit;
 using JdaTools.Studio.ViewModels;
+using Microsoft.Xaml.Behaviors.Core;
 
 namespace JdaTools.Studio.Views
 {
@@ -30,6 +32,7 @@ namespace JdaTools.Studio.Views
         public EditorView()
         {
             InitializeComponent();
+            SearchPanel.Install(TextEditor);
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -177,5 +180,7 @@ namespace JdaTools.Studio.Views
                 editor.Focus();
             }            
         }
+
+        
     }
 }

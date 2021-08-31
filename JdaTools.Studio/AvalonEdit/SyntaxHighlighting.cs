@@ -33,9 +33,12 @@ namespace JdaTools.Studio.AvalonEdit
             };
             MainRuleSet.Spans.Add(MocaHighlightResources.CommentSpan);
             MainRuleSet.Spans.Add(MocaHighlightResources.BlockCommentSpan);
-            MainRuleSet.Rules.Add(MocaHighlightResources.StringRule);
+            MainRuleSet.Spans.Add(MocaHighlightResources.SingleQuotesSpan);
+            MainRuleSet.Spans.Add(MocaHighlightResources.DoubleQuotesSpan);
             MainRuleSet.Rules.Add(MocaHighlightResources.XmlTagRule);
+            MainRuleSet.Rules.Add(MocaHighlightResources.VariableRule);
             MainRuleSet.Spans.Add(MocaHighlightResources.SqlSpan);
+
         }
         //Called after connecting
         public void SetCommands(IEnumerable<string> commands) //TODO Manage reconnects and not duplicating
@@ -55,18 +58,26 @@ namespace JdaTools.Studio.AvalonEdit
         public static HighlightingColor KeyWordColor { get; } = GetHighlightingColor(Colors.MediumPurple);
         public static HighlightingColor XmlTagColor { get; } = GetHighlightingColor(Colors.Gray);
         public static HighlightingColor CommandColor { get; } = GetHighlightingColor(Colors.CornflowerBlue);
+
         public static HighlightingSpan CommentSpan { get; } = BuildSpan("--|//", "$", CommentColor);
         public static HighlightingSpan BlockCommentSpan { get; } = BuildSpan("/\\*", "\\*/", CommentColor);
-        //Use rule for strings because start has to match end
-        public static HighlightingRule StringRule { get; } = new HighlightingRule
-        {
-            Regex = new Regex("\"(.*?)\"|'(.*?)'"),
-            Color = StringColor
-        };
+        public static HighlightingSpan DoubleQuotesSpan { get; } = BuildSpan("\"", "\"", StringColor);
+        public static HighlightingSpan SingleQuotesSpan { get; } = BuildSpan("'", "'", StringColor);
+
+
         public static HighlightingRule XmlTagRule { get; } = new HighlightingRule
         {
             Regex = new Regex(@"</?(.*?\w)/?>"),
             Color = XmlTagColor
+        };
+
+        public static HighlightingRule VariableRule { get; } = new HighlightingRule
+        {
+            Color = new HighlightingColor
+            {
+                FontWeight = FontWeights.Bold
+            },
+            Regex = new Regex("@(.*?\\w)\\b")
         };
 
         public static HighlightingSpan SqlSpan
@@ -75,7 +86,8 @@ namespace JdaTools.Studio.AvalonEdit
             {
                 var span = new HighlightingSpan()
                 {
-                    StartExpression = new Regex("\\["),
+                    //Sql between [] need but commands are nested in CDATA xml element where we don't want to detect sql
+                    StartExpression = new Regex("(?<!CDATA)(?<!<!)\\["), 
                     EndExpression = new Regex("\\]"),
                 };
                 span.RuleSet = new HighlightingRuleSet
@@ -84,28 +96,23 @@ namespace JdaTools.Studio.AvalonEdit
                     {
                         BlockCommentSpan,
                         CommentSpan,
+                        SingleQuotesSpan,
                     },
                     Rules =
                     {
-                        StringRule,
                         new HighlightingRule
                         {
                             Color = KeyWordColor,
                             Regex = GenerateKeywordRegEx(Keywords.SqlKeywords)
                         },
-                        new HighlightingRule
-                        {
-                            Color = new HighlightingColor
-                            {
-                                FontWeight = FontWeights.Bold
-                            },
-                            Regex = new Regex("@(.*?\\w)\\b")
-                        }
+                        VariableRule
                     }
                 };
                 return span;
             }
         }
+
+        
 
         public static Regex GenerateKeywordRegEx(string[] keywords)
         {
