@@ -23,7 +23,7 @@
                        Width="400px"></Image>-->
                 <Rectangle Width="400" Height="400">
                     <Rectangle.Fill>
-                        <SolidColorBrush Color="{StaticResource MahApps.Colors.Gray}"/>
+                        <SolidColorBrush Color="{StaticResource MahApps.Colors.AccentBase}"/>
                     </Rectangle.Fill>
                     <Rectangle.OpacityMask>
                         <ImageBrush ImageSource="../Assets/MS_fulltext_3000xx.png"/>
