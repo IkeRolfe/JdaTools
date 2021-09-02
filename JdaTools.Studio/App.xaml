@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:JdaTools.Studio"
              xmlns:converters="clr-namespace:JdaTools.Studio.Converters"
-             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit">
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:iconpacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             >
     
     <Application.Resources>
         <ResourceDictionary>
@@ -55,6 +57,7 @@
                                             </Binding>
                                         </TextBox.Text>
                                     </TextBox>
+
                                     <!-- FindNext button -->
                                     <Button Margin="0,1,1,1" Height="30" Width="30" Command="avalonedit:SearchCommands.FindNext" 
                                             ToolTip="{Binding Localization.FindNextText, RelativeSource={RelativeSource TemplatedParent}}" 

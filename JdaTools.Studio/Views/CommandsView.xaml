@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:JdaTools.Studio.Views"
              xmlns:iconpacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" xmlns:viewmodels="clr-namespace:JdaTools.Studio.ViewModels"
+             xmlns:components="clr-namespace:JdaTools.Studio.Components"
              mc:Ignorable="d"
              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
              d:DesignHeight="800" d:DesignWidth="450"
@@ -31,5 +32,15 @@
                   VirtualizingStackPanel.IsVirtualizing="True">
             
         </ListView>
+
+        <!-- Busy Component -->
+        <Grid Grid.RowSpan="2"
+              Panel.ZIndex="9999"
+              Visibility="{Binding BusyComponentVisibility}">
+            <Grid.Background>
+                <SolidColorBrush Color="{StaticResource MahApps.Colors.ProgressIndeterminate3}" Opacity="30"></SolidColorBrush>
+            </Grid.Background>
+            <components:BusyComponent Height="100" Width="100"></components:BusyComponent>
+        </Grid>
     </Grid>
 </UserControl>

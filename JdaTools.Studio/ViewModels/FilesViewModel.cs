@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using Caliburn.Micro;
@@ -47,8 +48,11 @@ namespace JdaTools.Studio.ViewModels
             {
                 _isBusy = value;
                 NotifyOfPropertyChange(()=>IsBusy);
+                NotifyOfPropertyChange(() => BusyComponentVisibility);
             }
         }
+
+        public Visibility BusyComponentVisibility => IsBusy ? Visibility.Visible : Visibility.Collapsed;
 
         private ObservableCollection<IMocaFile> _files;
 
