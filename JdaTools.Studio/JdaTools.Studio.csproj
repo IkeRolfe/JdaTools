@@ -11,7 +11,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\MOCAstudio.png" />
     <None Remove="Resources\sql.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\MOCAstudio.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +46,6 @@
 
   <ItemGroup>
     <Folder Include="Behaviors\" />
-    <Folder Include="Assets\" />
   </ItemGroup>
 
   <ItemGroup>
