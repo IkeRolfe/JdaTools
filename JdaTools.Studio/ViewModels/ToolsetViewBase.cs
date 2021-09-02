@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using JdaTools.Connection;
 using JdaTools.Studio.Services;
@@ -30,8 +31,11 @@ namespace JdaTools.Studio.ViewModels
             {
                 _isBusy = value;
                 NotifyOfPropertyChange(() => IsBusy);
+                NotifyOfPropertyChange(() => BusyComponentVisibility);
             }
         }
+
+        public Visibility BusyComponentVisibility => IsBusy ? Visibility.Visible : Visibility.Collapsed;
 
         public override string ToString()
         {

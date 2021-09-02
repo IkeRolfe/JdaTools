@@ -14,7 +14,8 @@
                   xmlns:cm="http://caliburnmicro.com"
                   xmlns:simpleChildWindow="http://metro.mahapps.com/winfx/xaml/simplechildwindow"
                   xmlns:avalonEdit="clr-namespace:JdaTools.Studio.AvalonEdit"
-                  Title="JDA EXPLORER" Height="900" Width="1600">
+                  Icon="../Assets/MS_logo_icon_white.ico"
+                  Title="MOCA STUDIO" Height="900" Width="1600">
     <mah:MetroWindow.InputBindings>
         <KeyBinding Modifiers="Control"
                     Key="N"

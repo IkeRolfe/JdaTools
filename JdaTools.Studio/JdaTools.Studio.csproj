@@ -16,6 +16,7 @@
     <None Remove="Assets\MOCA_Studio_Long_Format.png" />
     <None Remove="Assets\MS_fulltext_3000xx.png" />
     <None Remove="Assets\MS_logo_icon.ico" />
+    <None Remove="Assets\MS_logo_icon_white.ico" />
     <None Remove="Assets\MS_logo_only_3000xx.png" />
     <None Remove="Resources\sql.xshd" />
   </ItemGroup>
@@ -55,6 +56,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\MS_logo_icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\MS_logo_icon_white.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\MS_logo_only_3000xx.png">
