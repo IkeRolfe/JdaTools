@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using JdaTools.Studio.EventAggregatorMessages;
 using JdaTools.Studio.Helpers;
@@ -115,8 +116,11 @@ namespace JdaTools.Studio.ViewModels
             {
                 isBusy = value;
                 NotifyOfPropertyChange(() => IsBusy);
+                NotifyOfPropertyChange(() => BusyComponentVisibility);
             }
         }
+
+        public Visibility BusyComponentVisibility => IsBusy ? Visibility.Visible : Visibility.Collapsed;
 
         public async Task HandleAsync(string message, CancellationToken cancellationToken)
         {
