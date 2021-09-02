@@ -57,6 +57,10 @@
                             Command="{Binding LoginCommand}"
                             Style="{StaticResource MahApps.Styles.Button.Flat}"
                             IsDefault="True"/>
+                    <TextBlock FontSize="12"
+                               Margin="5,5, 0, 0"
+                               Text="{Binding AppVersion}"
+                               HorizontalAlignment="Left"></TextBlock>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

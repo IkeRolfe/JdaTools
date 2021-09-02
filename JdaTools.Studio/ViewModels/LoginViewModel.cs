@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -107,6 +108,8 @@ namespace JdaTools.Studio.ViewModels
                 NotifyOfPropertyChange(() => IsBusy);
             }
         }
+
+        public string AppVersion => "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         public Action LoginCompleteAction
         {
