@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:JdaTools.Studio"
              xmlns:converters="clr-namespace:JdaTools.Studio.Converters"
-             >
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit">
     
     <Application.Resources>
         <ResourceDictionary>
