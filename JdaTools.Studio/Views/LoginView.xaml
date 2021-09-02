@@ -11,23 +11,63 @@
              >
 
     <Grid>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                <ComboBox ItemsSource="{Binding Connections}" SelectedItem="{Binding Path=SelectedConnection, Mode=OneWay}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <TextBox Text="{Binding EndpointName}" mah:TextBoxHelper.Watermark="Connection Name" MinWidth="200"/>
-                <TextBox Text="{Binding Endpoint}" mah:TextBoxHelper.Watermark="Url" MinWidth="200"/>
+        <StackPanel Orientation="Vertical"
+                    HorizontalAlignment="Center"
+                    Margin="30px">
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="20px">
+                <!--<Image Source="../Assets/MOCAstudio.png"
+                       Stretch="Uniform"
+                       Width="400px"></Image>-->
+                <Rectangle Width="506" Height="150">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="{StaticResource MahApps.Colors.AccentBase}"/>
+                    </Rectangle.Fill>
+                    <Rectangle.OpacityMask>
+                        <ImageBrush ImageSource="../Assets/MOCA_Studio_Long_Format.png"/>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
             </StackPanel>
-            <StackPanel Orientation="Vertical">
-                <TextBox x:Name="Username" Text="{Binding UserName}" mah:TextBoxHelper.Watermark="Username"
-                         CharacterCasing="Upper" MinWidth="200"/>
-                <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" mah:TextBoxHelper.Watermark="Password" />
-                <Button Content="LOGIN" Command="{Binding LoginCommand}" IsDefault="True"/>
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="20px">
+                <StackPanel Orientation="Vertical" Margin="0,0,0,20">
+                    <ComboBox ItemsSource="{Binding Connections}" SelectedItem="{Binding Path=SelectedConnection, Mode=OneWay}" Margin="0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" FontSize="14"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBox Text="{Binding EndpointName}"
+                             FontSize="14"
+                             mah:TextBoxHelper.Watermark="Connection Name" MinWidth="200" Margin="0,5,0,0"/>
+                    <TextBox Text="{Binding Endpoint}"
+                             FontSize="14"
+                             mah:TextBoxHelper.Watermark="Url" MinWidth="200" Margin="0,5,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBox x:Name="Username" Text="{Binding UserName}" mah:TextBoxHelper.Watermark="Username"
+                             CharacterCasing="Upper"
+                             FontSize="14" MinWidth="200"/>
+                    <PasswordBox PasswordChanged="PasswordBox_PasswordChanged"
+                                 FontSize="14"
+                                 mah:TextBoxHelper.Watermark="Password"
+                                 />
+                    <Button Content="LOGIN"
+                            Margin="2"
+                            FontSize="16"
+                            Command="{Binding LoginCommand}"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}"
+                            IsDefault="True"/>
+                    <TextBlock FontSize="14"
+                               Margin="5,5, 0, 0"
+                               Text="{Binding AppVersion}"
+                               HorizontalAlignment="Left"></TextBlock>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>
