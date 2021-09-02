@@ -8,17 +8,13 @@
     <FileVersion>0.3.0.0</FileVersion>
 	  <PublishSingleFile>true</PublishSingleFile>
 	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	  <ApplicationIcon>MS_logo_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Assets\MOCAstudio.png" />
+    <None Remove="Assets\MS_fulltext_3000xx.png" />
     <None Remove="Resources\sql.xshd" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Assets\MOCAstudio.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +42,12 @@
 
   <ItemGroup>
     <Folder Include="Behaviors\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\MS_fulltext_3000xx.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

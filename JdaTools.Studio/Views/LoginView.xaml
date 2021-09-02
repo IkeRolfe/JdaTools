@@ -23,10 +23,10 @@
                        Width="400px"></Image>-->
                 <Rectangle Width="400" Height="400">
                     <Rectangle.Fill>
-                        <SolidColorBrush Color="{StaticResource MahApps.Colors.AccentBase}"/>
+                        <SolidColorBrush Color="{StaticResource MahApps.Colors.Gray}"/>
                     </Rectangle.Fill>
                     <Rectangle.OpacityMask>
-                        <ImageBrush ImageSource="../Assets/MOCAstudio.png"/>
+                        <ImageBrush ImageSource="../Assets/MS_fulltext_3000xx.png"/>
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </StackPanel>

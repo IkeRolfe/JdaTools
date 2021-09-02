@@ -110,6 +110,7 @@ namespace JdaTools.Studio.ViewModels
         }
 
         public string AppVersion => "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public string LogoColor => AppDataSettings.Default.IsDarkModeEnabled ? "White" : "Gray";
 
         public Action LoginCompleteAction
         {
