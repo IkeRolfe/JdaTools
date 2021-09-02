@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <Folder Include="Behaviors\" />
+    <Folder Include="Assets\" />
   </ItemGroup>
 
   <ItemGroup>
