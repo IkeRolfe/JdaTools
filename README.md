@@ -1,3 +1,5 @@
+<img src="JdaTools.Studio/Assets/MOCA_Studio_Long_Format.png" alt="MOCA STUDIO" width="500"/>
+
 # JdaTools
 Tools and library for connecting to JDA/RedPrairie/Blue Yonder
 # JdaTools.Connection
