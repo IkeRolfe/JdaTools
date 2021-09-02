@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using ICSharpCode.AvalonEdit.Highlighting;
 
 namespace JdaTools.Studio.Controls
 {
@@ -24,9 +25,19 @@ namespace JdaTools.Studio.Controls
             if (CurrentSyntax != syntax) CurrentSyntax = syntax;
         }
 
+
         private void DoAutoComplete(object sender, TextCompositionEventArgs e)
         {
+            //TODO
+            var highlighter = TextArea.GetService(typeof(IHighlighter)) as DocumentHighlighter;
+            var document = highlighter.Document;
+            var stack = highlighter.GetSpanStack(document.GetLocation(CaretOffset).Line);
             
+            if (stack.Any())
+            {
+                var last = stack.LastOrDefault();
+                var ruleSet = last?.RuleSet;
+            }
         }
 
 
@@ -60,7 +71,7 @@ namespace JdaTools.Studio.Controls
                 mocaStart = text.IndexOf(searchString, StringComparison.InvariantCultureIgnoreCase) + searchString.Length;
                 mocaEnd = text.IndexOf("</local-syntax>", StringComparison.InvariantCultureIgnoreCase);
             }
-            if (caretOffset <= mocaStart || caretOffset >= mocaEnd)
+            if ((caretOffset <= mocaStart || mocaEnd > 0) || caretOffset >= mocaEnd)
             {
                 return CodeSyntax.UNDEFINED;
             }

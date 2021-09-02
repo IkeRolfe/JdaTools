@@ -29,7 +29,7 @@ namespace JdaTools.Studio.AvalonEdit
         {
             MainRuleSet = new HighlightingRuleSet()
             {
-                Name = "MOCA Default"
+                Name = "MOCA"
             };
             MainRuleSet.Spans.Add(MocaHighlightResources.CommentSpan);
             MainRuleSet.Spans.Add(MocaHighlightResources.BlockCommentSpan);
@@ -59,10 +59,10 @@ namespace JdaTools.Studio.AvalonEdit
         public static HighlightingColor XmlTagColor { get; } = GetHighlightingColor(Colors.Gray);
         public static HighlightingColor CommandColor { get; } = GetHighlightingColor(Colors.CornflowerBlue);
 
-        public static HighlightingSpan CommentSpan { get; } = BuildSpan("--|//", "$", CommentColor);
-        public static HighlightingSpan BlockCommentSpan { get; } = BuildSpan("/\\*", "\\*/", CommentColor);
-        public static HighlightingSpan DoubleQuotesSpan { get; } = BuildSpan("\"", "\"", StringColor);
-        public static HighlightingSpan SingleQuotesSpan { get; } = BuildSpan("'", "'", StringColor);
+        public static HighlightingSpan CommentSpan { get; } = BuildSpan("--|//", "$", CommentColor, true, true, "Comments");
+        public static HighlightingSpan BlockCommentSpan { get; } = BuildSpan("/\\*", "\\*/", CommentColor, true, true, "Comments");
+        public static HighlightingSpan DoubleQuotesSpan { get; } = BuildSpan("\"", "\"", StringColor, true, true, "Strings");
+        public static HighlightingSpan SingleQuotesSpan { get; } = BuildSpan("'", "'", StringColor, true, true, "Strings");
 
 
         public static HighlightingRule XmlTagRule { get; } = new HighlightingRule
@@ -92,6 +92,7 @@ namespace JdaTools.Studio.AvalonEdit
                 };
                 span.RuleSet = new HighlightingRuleSet
                 {
+                    Name = "SQL",
                     Spans =
                     {
                         BlockCommentSpan,
@@ -116,6 +117,7 @@ namespace JdaTools.Studio.AvalonEdit
 
         public static Regex GenerateKeywordRegEx(string[] keywords)
         {
+            //Order by desc to avoid partial matches
             return new Regex(string.Join('|',
                     keywords.OrderByDescending(w => w.Length)
                         .Select(w => $"\\b{w}\\b")),
@@ -131,20 +133,27 @@ namespace JdaTools.Studio.AvalonEdit
             string endRegex,
             HighlightingColor highlightingColor,
             bool colorStart = true,
-            bool colorEnd = true) =>
-            BuildSpan(new Regex(startRegex), new Regex(endRegex), highlightingColor, colorStart, colorEnd);
+            bool colorEnd = true, string name = null
+        ) =>
+            BuildSpan(new Regex(startRegex), new Regex(endRegex), highlightingColor, colorStart, colorEnd, name);
+
         private static HighlightingSpan BuildSpan(Regex startRegex,
             Regex endRegex,
             HighlightingColor highlightingColor,
             bool colorStart = true,
-            bool colorEnd = true) =>
+            bool colorEnd = true,
+            string name = null) =>
             new()
             {
                 SpanColor = highlightingColor,
                 StartExpression = startRegex,
                 EndExpression = endRegex,
                 SpanColorIncludesStart = colorStart,
-                SpanColorIncludesEnd = colorEnd
+                SpanColorIncludesEnd = colorEnd,
+                RuleSet = new HighlightingRuleSet
+                {
+                    Name = name
+                }
             };
     }
 

@@ -92,9 +92,10 @@
                            Fill="{StaticResource MahApps.Brushes.Button.Border}">
                 </Rectangle>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <ContentControl Margin="2" Focusable="False" HorizontalAlignment="Center">
-                    <iconPacks2:PackIconMaterial Kind="{Binding InfoBarIcon}"
+            <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Margin="2" Focusable="False" HorizontalAlignment="Center">
+                        <iconPacks2:PackIconMaterial Kind="{Binding InfoBarIcon}"
                                             Margin="0"
                                             Height="15"
                                             Width="15"
@@ -102,12 +103,15 @@
                                             SpinDuration="3"
                                             Focusable="False"
                                             Foreground="{Binding InfoBarColor}"/>
-                </ContentControl>
-                <TextBlock Text="{Binding InfoBarText}" VerticalAlignment="Center"
+                    </ContentControl>
+                    <TextBlock Text="{Binding InfoBarText}" VerticalAlignment="Center"
                        Foreground="{StaticResource MahApps.Brushes.Text}"/>
+                </StackPanel>
                 <TextBlock Text="{Binding ElementName=TextEditor, Path=CurrentSyntax}" VerticalAlignment="Center"
-                           Foreground="Red"/>
-            </StackPanel>
+                           Foreground="{StaticResource MahApps.Brushes.IdealForegroundDisabled}"
+                           HorizontalAlignment="Right"/>
+
+            </Grid>
         </StackPanel>
     </Grid>
 </UserControl>
