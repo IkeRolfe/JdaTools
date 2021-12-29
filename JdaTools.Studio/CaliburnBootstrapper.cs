@@ -28,13 +28,13 @@ namespace JdaTools.Studio
             _container.Singleton<IWindowManager, WindowManager>();
             _container.Singleton<SchemaExplorer>();
             _container.Singleton<MocaClient>();
-            _container.Singleton<MocaHighlightingDefinition>();
+            _container.PerRequest<MocaHighlightingDefinition>();
             _container.PerRequest<ShellViewModel>();
             _container.PerRequest<TablesViewModel>();
             _container.PerRequest<FilesViewModel>();
             _container.PerRequest<CommandsViewModel>();
             _container.PerRequest<LoginViewModel>();
-            //Hotkey parser
+            //TODO:Hotkey parser
 
         }
 

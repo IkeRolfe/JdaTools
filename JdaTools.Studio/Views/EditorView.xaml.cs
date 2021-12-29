@@ -32,7 +32,6 @@ namespace JdaTools.Studio.Views
         public EditorView()
         {
             InitializeComponent();
-            
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

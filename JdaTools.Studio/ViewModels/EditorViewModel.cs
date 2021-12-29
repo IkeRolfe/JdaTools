@@ -31,6 +31,10 @@ namespace JdaTools.Studio.ViewModels
         {
             _mocaClient = mocaClient;
             QueryDocument.Text = query;
+            if (query.StartsWith("<"))
+            {
+                HighlightingDefinition.IsCommandFile = true;
+            }
             SetInfoBar("Circle", "Gray", false, "");
         }
 

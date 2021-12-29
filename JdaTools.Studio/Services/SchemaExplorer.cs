@@ -84,7 +84,11 @@ namespace JdaTools.Studio.Services
             var commands = await _mocaClient.ExecuteQuery<CommandDefinition>("list active commands;");
             if (commands != null)
             {
-                IoC.Get<MocaHighlightingDefinition>().SetCommands(commands.Select(c=>c.CommandName));
+                foreach (var highlightingDef in IoC.GetAllInstances(typeof(MocaHighlightingDefinition)))
+                {
+                    (highlightingDef as MocaHighlightingDefinition)?.SetCommands(
+                        commands.Select(c => c.CommandName));
+                }
                 Commands = commands.OrderBy(c=>c.CommandName);
             }
         }

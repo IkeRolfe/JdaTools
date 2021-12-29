@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
+using Caliburn.Micro;
 using ICSharpCode.AvalonEdit.Highlighting;
+using JdaTools.Studio.Services;
 
 namespace JdaTools.Studio.AvalonEdit
 {
@@ -19,31 +21,59 @@ namespace JdaTools.Studio.AvalonEdit
         {
             throw new System.NotImplementedException();
         }
-
         public string Name { get; } = "MOCA";
         public HighlightingRuleSet MainRuleSet { get; private set; }
         public IEnumerable<HighlightingColor> NamedHighlightingColors { get; }
         public IDictionary<string, string> Properties { get; }
 
-        public MocaHighlightingDefinition()
-        {
-            MainRuleSet = new HighlightingRuleSet()
-            {
-                Name = "MOCA"
-            };
-            MainRuleSet.Spans.Add(MocaHighlightResources.CommentSpan);
-            MainRuleSet.Spans.Add(MocaHighlightResources.BlockCommentSpan);
-            MainRuleSet.Spans.Add(MocaHighlightResources.SingleQuotesSpan);
-            MainRuleSet.Spans.Add(MocaHighlightResources.DoubleQuotesSpan);
-            MainRuleSet.Rules.Add(MocaHighlightResources.XmlTagRule);
-            MainRuleSet.Rules.Add(MocaHighlightResources.VariableRule);
-            MainRuleSet.Spans.Add(MocaHighlightResources.SqlSpan);
+        private readonly HighlightingRuleSet _mocaRuleSet;
+        private readonly HighlightingRuleSet _commandRuleSet;
+        private bool _isCommandFile;
 
+        public bool IsCommandFile
+        {
+            get => _isCommandFile;
+            set
+            {
+                if (value == _isCommandFile)
+                {
+                    return;
+                }
+                MainRuleSet = value ? _commandRuleSet : _mocaRuleSet;
+                _isCommandFile = value;
+            }
+        }
+
+
+        public MocaHighlightingDefinition(bool isCommandFile = false)
+        {
+            _commandRuleSet = new HighlightingRuleSet
+            {
+                Spans =
+                {
+                    new HighlightingSpan
+                    {
+                        RuleSet = MocaHighlightResources.MocaRuleSet,
+                        SpanColorIncludesEnd = false,
+                        SpanColorIncludesStart = false,
+                        StartExpression = new Regex("CDATA\\["),
+                        EndExpression = new Regex("</local-syntax>")
+                    }
+                }
+            };
+            _mocaRuleSet = MocaHighlightResources.MocaRuleSet;
+            MainRuleSet = isCommandFile ? _commandRuleSet : _mocaRuleSet;
+            var commands = IoC.Get<SchemaExplorer>().Commands?.Select(c => c.CommandName);
+            if (commands != null)
+            {
+                SetCommands(commands);
+            }
+            
         }
         //Called after connecting
         public void SetCommands(IEnumerable<string> commands) //TODO Manage reconnects and not duplicating
         {
-            MainRuleSet.Rules.Add(new HighlightingRule
+            _mocaRuleSet.Rules.Add(new HighlightingRule
             {
                 Color = MocaHighlightResources.CommandColor,
                 Regex = MocaHighlightResources.GenerateKeywordRegEx(commands.ToArray())
@@ -58,7 +88,6 @@ namespace JdaTools.Studio.AvalonEdit
         public static HighlightingColor KeyWordColor { get; } = GetHighlightingColor(Colors.MediumPurple);
         public static HighlightingColor XmlTagColor { get; } = GetHighlightingColor(Colors.Gray);
         public static HighlightingColor CommandColor { get; } = GetHighlightingColor(Colors.CornflowerBlue);
-
         public static HighlightingSpan CommentSpan { get; } = BuildSpan("--|//", "$", CommentColor, true, true, "Comments");
         public static HighlightingSpan BlockCommentSpan { get; } = BuildSpan("/\\*", "\\*/", CommentColor, true, true, "Comments");
         public static HighlightingSpan DoubleQuotesSpan { get; } = BuildSpan("\"", "\"", StringColor, true, true, "Strings");
@@ -79,6 +108,25 @@ namespace JdaTools.Studio.AvalonEdit
             },
             Regex = new Regex("@(.*?\\w)\\b")
         };
+
+        public static HighlightingRuleSet MocaRuleSet { get; } = new HighlightingRuleSet
+        {
+            Name = "MOCA",
+            Rules =
+            {
+                XmlTagRule,
+                VariableRule
+            },
+            Spans =
+            {
+                CommentSpan,
+                BlockCommentSpan,
+                SingleQuotesSpan,
+                DoubleQuotesSpan,
+                SqlSpan
+            }
+        };
+
 
         public static HighlightingSpan SqlSpan
         {

@@ -15,7 +15,7 @@
                 </ResourceDictionary>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/light.pink.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/dark.blue.xaml" />
                 <ResourceDictionary Source="/AvalonDock.Themes.VS2013;component/DarkBrushs.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
@@ -39,14 +39,16 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type avalonedit:SearchPanel}">
-                            <Border Background="{DynamicResource WindowBackgroundBrush}" 
-                                    BorderBrush="{DynamicResource AccentColorBrush}" 
-                                    BorderThickness="1,0,1,1" HorizontalAlignment="Right" 
+                            <Border 
+                                Background="{StaticResource MahApps.Brushes.Window.Background}"
+                                BorderBrush="{StaticResource MahApps.Brushes.Accent}" 
+                                    BorderThickness="2,0,2,2" HorizontalAlignment="Right" 
+                                    Padding="5"
                                     VerticalAlignment="Top" Cursor="Arrow">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox Name="PART_searchTextBox" Focusable="True" 
-                                             BorderBrush="{DynamicResource AccentColorBrush}" 
-                                             Width="150" Height="Auto" Margin="3,3,0,3">
+                                             BorderBrush="{StaticResource MahApps.Brushes.Accent}" 
+                                             Width="150" Height="Auto" Margin="1,3,0,3">
                                         <TextBox.Text>
                                             <Binding Path="SearchPattern" 
                                                      RelativeSource="{RelativeSource TemplatedParent}" 
@@ -59,10 +61,9 @@
                                     </TextBox>
 
                                     <!-- FindNext button -->
-                                    <Button Margin="0,1,1,1" Height="30" Width="30" Command="avalonedit:SearchCommands.FindNext" 
+                                    <Button Margin="0,1,2,1" Height="30" Width="30" Command="avalonedit:SearchCommands.FindNext" 
                                             ToolTip="{Binding Localization.FindNextText, RelativeSource={RelativeSource TemplatedParent}}" 
-                                            Padding="1" Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                            BorderThickness="0" BorderBrush="Transparent">
+                                            Padding="1" Style="{StaticResource MahApps.Styles.Button.Flat}">
                                         <iconpacks:Material Kind="ArrowRight"></iconpacks:Material>
                                     </Button>
 
