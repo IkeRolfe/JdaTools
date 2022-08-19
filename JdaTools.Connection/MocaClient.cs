@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -137,23 +138,31 @@ namespace JdaTools.Connection
                         try
                         {
                             var value = dataRow[columnName];
-                            if (propertyInfo.PropertyType == typeof(DateTime))
+                            if (propertyInfo.PropertyType == typeof(DateTime) && value.GetType() != typeof(DateTime))
                             {
-                                value = DateTime.Parse((string)value);
+                                //Moca returns date in string formateg 20190523151154
+                                if (value.ToString().Length == 14)
+                                {
+                                    CultureInfo provider = CultureInfo.InvariantCulture;
+                                    value = DateTime.ParseExact(value.ToString(), "yyyyMMddHHmmss", provider);
+                                }
                             }
-                            else if (propertyInfo.PropertyType == typeof(bool))
+                            else if (propertyInfo.PropertyType == typeof(bool) && value.GetType() != typeof(bool))
                             {
-                                if (value == "0" || value == "")
+                                if (value.ToString() == "0" || string.IsNullOrEmpty(value.ToString()) )
                                 {
-                                    value = false;
+                                    value = false.ToString();
                                 }
-                                else if (value == "1")
+                                else if (value.ToString() == "1")
                                 {
-                                    value = true;
+                                    value = true.ToString();
                                 }
-                                value = bool.Parse(value.ToString());
+                            } 
+                            else
+                            {
+                                TrySetProperty(retVal, propertyInfo.Name, value);
                             }
-                            TrySetProperty(retVal, propertyInfo.Name, value);
+                            
                         }
                         catch (ArgumentException e)
                         {
