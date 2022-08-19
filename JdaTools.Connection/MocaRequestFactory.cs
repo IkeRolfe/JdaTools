@@ -40,7 +40,7 @@ namespace JdaTools.Connection
             {
                 Environment = new MocaRequestVar[]
                 {
-                    new MocaRequestVar("DEVCOD", "JDA STUDIO"),
+                    new MocaRequestVar("DEVCOD", credentials.DevCod),
                     new MocaRequestVar("LOCALE_ID", "US_ENGLISH"),
                 },
                 Context = new MocaParameter[]

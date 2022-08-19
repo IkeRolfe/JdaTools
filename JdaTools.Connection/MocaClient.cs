@@ -30,6 +30,15 @@ namespace JdaTools.Connection
             _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
         }
 
+        public MocaClient(string endpoint, string sessionKey)
+        {
+            _endpoint = endpoint;
+            _mocaRequestFactory = new MocaRequestFactory(sessionKey);
+            //_httpHandler = new MocaHttpHandler();
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+        }
+
         public MocaClient()
         {
             _httpClient = new HttpClient();
@@ -54,7 +63,9 @@ namespace JdaTools.Connection
                 _mocaRequestFactory = new MocaRequestFactory(sessionKey.ToString());
             }
             return response;
-        }
+        }       
+        
+
         public async Task<MocaResponse> Logout() 
         {
             return await ExecuteQuery("logout");
