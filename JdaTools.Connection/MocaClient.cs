@@ -151,18 +151,16 @@ namespace JdaTools.Connection
                             {
                                 if (value.ToString() == "0" || string.IsNullOrEmpty(value.ToString()) )
                                 {
-                                    value = false.ToString();
+                                    value = false;
                                 }
                                 else if (value.ToString() == "1")
                                 {
-                                    value = true.ToString();
+                                    value = true;
                                 }
-                            } 
-                            else
-                            {
-                                TrySetProperty(retVal, propertyInfo.Name, value);
                             }
-                            
+
+                            TrySetProperty(retVal, propertyInfo.Name, value);
+
                         }
                         catch (ArgumentException e)
                         {

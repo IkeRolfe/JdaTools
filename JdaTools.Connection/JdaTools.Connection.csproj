@@ -6,7 +6,8 @@
     <PackageIcon>MS_logo_only.png</PackageIcon>
     <Description>A dapper style connection and ORM tool for JDA</Description>
     <AssemblyVersion>1.0.1</AssemblyVersion>
-    <Version>$(VersionPrefix)1.0.2</Version>
+    <Version>$(VersionPrefix)1.0.4</Version>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\MS_logo_only.png">
