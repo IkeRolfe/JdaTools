@@ -21,7 +21,7 @@ namespace JdaTools.Connection
         private MocaHttpHandler _httpHandler;
         private MocaRequestFactory _mocaRequestFactory;
         private string _endpoint;
-        private MocaCredentials _credentialsCache;
+        private MocaCredentials? _credentialsCache;
 
         public MocaClient(string endpoint)
         {
@@ -67,9 +67,10 @@ namespace JdaTools.Connection
         }       
         
 
-        public async Task<MocaResponse> Logout() 
+        public async Task Logout() 
         {
-            return await ExecuteQuery("logout");
+             await ExecuteQueryAsync("logout");
+            _credentialsCache = null;
         }
 
         private async Task<MocaResponse> PostAsync(MocaRequest request)
@@ -90,14 +91,19 @@ namespace JdaTools.Connection
             return response;
         }
 
-        public async Task<MocaResponse> ExecuteQuery(string query, object parameters = null)
+        [Obsolete("ExecuteQuery is depricated use ExecuteQueryAsync instead.")]
+        public Task<MocaResponse> ExecuteQuery(string query, object parameters = null) => ExecuteQueryAsync(query, parameters);
+        [Obsolete("ExecuteQuery<T> is depricated use ExecuteQueryAsync<T> instead.")]
+        public Task<IEnumerable<T>> ExecuteQuery<T>(string query, object parameters = null) => ExecuteQueryAsync<T>(query, parameters);
+
+        public async Task<MocaResponse> ExecuteQueryAsync(string query, object parameters = null)
         {
             var request = _mocaRequestFactory.Get(query, parameters);
             var response = await PostAsync(request);
             //Check if logged in
-            if (response.status == 523)
+            if (response.status == 523 && _credentialsCache != null)
             {
-                var connectResponse = await ConnectAsync(_credentialsCache); //TODO handle auth error
+                var connectResponse = await ConnectAsync((MocaCredentials)_credentialsCache); //TODO handle auth error
                 //Need to generate request again since it has session id
                 request = _mocaRequestFactory.Get(query, parameters);
                 response = await PostAsync(request);
@@ -105,9 +111,13 @@ namespace JdaTools.Connection
             return response;
         }
 
-        public async Task<IEnumerable<T>> ExecuteQuery<T>(string query, object parameters = null) 
+        public async Task<IEnumerable<T>> ExecuteQueryAsync<T>(string query, object parameters = null) 
         {
-            var response = await ExecuteQuery(query, parameters);
+            var response = await ExecuteQueryAsync(query, parameters);
+            if (response.status != 0)
+            {
+                throw new MocaException(response);
+            }
             var dt = response.MocaResults.GetDataTable();
             var type = typeof(T);
 

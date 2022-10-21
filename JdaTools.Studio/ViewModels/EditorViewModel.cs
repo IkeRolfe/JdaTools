@@ -140,7 +140,7 @@ namespace JdaTools.Studio.ViewModels
             {
                 return;
             }
-            var result = await _mocaClient.ExecuteQuery(query);
+            var result = await _mocaClient.ExecuteQueryAsync(query);
             if (result.status != 0)
             {
                 //QueryDocument.Text = $"ERROR {result.status}: {result.message}";
@@ -198,7 +198,7 @@ namespace JdaTools.Studio.ViewModels
             var dialogueAccepted = await Helpers.DialogueHelper.ShowDialogueYesNo($"UPLOAD {Title}", $"Are you sure you want to upload to {RemotePath} on server?\r\nThis will overwrite file if it exist.");
             if (dialogueAccepted)
             {
-                var result = await _mocaClient.ExecuteQuery("write output file where path = @path and data = @data", new
+                var result = await _mocaClient.ExecuteQueryAsync("write output file where path = @path and data = @data", new
                 {
                     path = RemotePath.Substring(0, RemotePath.LastIndexOf("\\", StringComparison.Ordinal)),
                     filename = Title,

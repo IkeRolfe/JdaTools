@@ -69,9 +69,9 @@ namespace JdaTools.Studio.Services
 
         public async Task RefreshTables()
         {
-            var tables = await _mocaClient.ExecuteQuery<TableDefinition>("list user tables;");
+            var tables = await _mocaClient.ExecuteQueryAsync<TableDefinition>("list user tables;");
             
-            var columns = await _mocaClient.ExecuteQuery<ColumnDefintion>("list tables with column");
+            var columns = await _mocaClient.ExecuteQueryAsync<ColumnDefintion>("list tables with column");
             foreach (var table in tables)
             {
                 IEnumerable<ColumnDefintion> tableColumns = columns.Where(c => c.TableName.ToUpper() == table.TableName.ToUpper());
@@ -81,7 +81,7 @@ namespace JdaTools.Studio.Services
         }
         public async Task RefreshCommands()
         {
-            var commands = await _mocaClient.ExecuteQuery<CommandDefinition>("list active commands;");
+            var commands = await _mocaClient.ExecuteQueryAsync<CommandDefinition>("list active commands;");
             if (commands != null)
             {
                 foreach (var highlightingDef in IoC.GetAllInstances(typeof(MocaHighlightingDefinition)))
@@ -95,7 +95,7 @@ namespace JdaTools.Studio.Services
 
         public async Task RefreshFiles()
         {
-            var response = await _mocaClient.ExecuteQuery("find file where pathname = @@LESDIR || '/src/cmdsrc/*' | { if ( @type = 'D' ) find file where pathname = @pathname || '/*.m*' }");
+            var response = await _mocaClient.ExecuteQueryAsync("find file where pathname = @@LESDIR || '/src/cmdsrc/*' | { if ( @type = 'D' ) find file where pathname = @pathname || '/*.m*' }");
             var dt = response.MocaResults.GetDataTable();
             var files = dt.AsEnumerable().Select(x => x["PATHNAME"].ToString()).ToList();
 
@@ -109,7 +109,7 @@ namespace JdaTools.Studio.Services
             
             if (string.IsNullOrEmpty(path))
             {
-                filesRaw = (await _mocaClient.ExecuteQuery<MocaFile>("find file where pathname = @@LESDIR || '/src/cmdsrc/*'")).ToList();
+                filesRaw = (await _mocaClient.ExecuteQueryAsync<MocaFile>("find file where pathname = @@LESDIR || '/src/cmdsrc/*'")).ToList();
             }
             else
             {
@@ -121,7 +121,7 @@ namespace JdaTools.Studio.Services
                     Type = "D"
                 };
                 filesRaw.Add(previousDir);
-                var dirFiles = await _mocaClient.ExecuteQuery<MocaFile>("find file where pathname = @path || '/*'", new {path});
+                var dirFiles = await _mocaClient.ExecuteQueryAsync<MocaFile>("find file where pathname = @path || '/*'", new {path});
                 filesRaw.AddRange(dirFiles);
             }
 
@@ -162,7 +162,7 @@ namespace JdaTools.Studio.Services
 
         public async Task<string> GetFileContent(MocaFile file)
         {
-            var response = await _mocaClient.ExecuteQuery("download file where filename = @filePath", new { filePath = file.PathName });
+            var response = await _mocaClient.ExecuteQueryAsync("download file where filename = @filePath", new { filePath = file.PathName });
             var content = response.MocaResults.GetDataTable().Rows[0]["DATA"].ToString();
             var text = Encoding.UTF8.GetString(Convert.FromBase64String(content));
             return text;

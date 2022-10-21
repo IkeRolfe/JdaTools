@@ -136,7 +136,7 @@ namespace JdaTools.Studio.ViewModels
             //TODO: Move to messaging service
             var shellView = App.Current.MainWindow;
             var vm = (ShellViewModel)shellView.DataContext;
-            var response = await _mocaClient.ExecuteQuery("download file where filename = @filePath",new {filePath = file.PathName});
+            var response = await _mocaClient.ExecuteQueryAsync("download file where filename = @filePath",new {filePath = file.PathName});
             var content = response.MocaResults.GetDataTable().Rows[0]["DATA"].ToString();
             var text = Encoding.UTF8.GetString(Convert.FromBase64String(content));
             /*//Check if command file
