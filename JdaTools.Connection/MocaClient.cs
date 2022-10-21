@@ -15,7 +15,7 @@ using JdaTools.Connection.Attributes;
 
 namespace JdaTools.Connection
 {
-    public class MocaClient
+    public class MocaClient : IMocaClient
     {
         private HttpClient _httpClient;
         private MocaHttpHandler _httpHandler;
@@ -64,12 +64,12 @@ namespace JdaTools.Connection
                 _mocaRequestFactory = new MocaRequestFactory(sessionKey.ToString());
             }
             return response;
-        }       
-        
+        }
 
-        public async Task Logout() 
+
+        public async Task Logout()
         {
-             await ExecuteQueryAsync("logout");
+            await ExecuteQueryAsync("logout");
             _credentialsCache = null;
         }
 
@@ -111,7 +111,7 @@ namespace JdaTools.Connection
             return response;
         }
 
-        public async Task<IEnumerable<T>> ExecuteQueryAsync<T>(string query, object parameters = null) 
+        public async Task<IEnumerable<T>> ExecuteQueryAsync<T>(string query, object parameters = null)
         {
             var response = await ExecuteQueryAsync(query, parameters);
             if (response.status != 0)
@@ -122,7 +122,7 @@ namespace JdaTools.Connection
             var type = typeof(T);
 
             var properties = type.GetProperties()
-                .Where(p=>p.IsDefined(typeof(MocaColumnAttribute), false));
+                .Where(p => p.IsDefined(typeof(MocaColumnAttribute), false));
 
             var returnList = new List<T>();
             //Create new instance for each row
@@ -159,7 +159,7 @@ namespace JdaTools.Connection
                             }
                             else if (propertyInfo.PropertyType == typeof(bool) && value.GetType() != typeof(bool))
                             {
-                                if (value.ToString() == "0" || string.IsNullOrEmpty(value.ToString()) )
+                                if (value.ToString() == "0" || string.IsNullOrEmpty(value.ToString()))
                                 {
                                     value = false;
                                 }
