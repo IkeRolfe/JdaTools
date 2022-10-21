@@ -183,6 +183,11 @@ namespace JdaTools.Connection
             }
             return returnList;
         }
+        public async Task<T> FirstOrDefault<T>(string query, object parameters = null)
+        {
+            var results = await ExecuteQueryAsync<T>(query, parameters);
+            return results.FirstOrDefault();
+        }
 
         private bool TrySetProperty(object obj, string property, object value)
         {
